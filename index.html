@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>暑期未成年人保护观察 · 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root{
     --bg:#f0f4f8; --card:#ffffff; --ink:#1a1a2e; --sub:#90a4ae;
@@ -26,6 +27,8 @@
   .last-date{font-size:12px;color:#90a4ae}
   .refresh-btn{background:var(--brand);color:var(--brand-dark);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600}
   .refresh-btn:hover{background:#29b6f6}
+  .upload-btn{background:#fff;color:var(--brand);border:1.5px solid var(--brand);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600}
+  .upload-btn:hover{background:#e6f7ff}
 
   /* Tab 栏 */
   .tab-bar{background:#fff;padding:0 32px;border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:99;display:flex;gap:0}
@@ -157,12 +160,53 @@
 
   .wb-footer{margin-top:40px;text-align:center;color:#9aa3b8;font-size:11.5px;line-height:1.8;padding-bottom:40px}
 
+  /* ===== 上传弹窗 ===== */
+  .modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+  .modal-mask.show{opacity:1;pointer-events:auto}
+  .modal{background:#fff;border-radius:16px;width:720px;max-width:96vw;max-height:88vh;overflow-y:auto;padding:28px 30px 24px;box-shadow:0 12px 40px rgba(0,0,0,.25);position:relative}
+  .modal h2{font-size:17px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  .modal .close-btn{position:absolute;top:16px;right:18px;background:none;border:none;font-size:22px;cursor:pointer;color:#999}
+  .modal .close-btn:hover{color:var(--ink)}
+  .drop-zone{border:2px dashed var(--line);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:16px;background:var(--bg)}
+  .drop-zone.dragover{border-color:var(--brand);background:#e6f7ff}
+  .drop-zone .dz-icon{font-size:38px;margin-bottom:8px}
+  .drop-zone .dz-text{font-size:13.5px;color:var(--sub)}
+  .drop-zone .dz-hint{font-size:11.5px;color:#bbb;margin-top:4px}
+  .file-info{font-size:12.5px;color:var(--sub);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .file-info .fi-name{font-weight:600;color:var(--ink)}
+  .parse-preview{background:var(--bg);border-radius:10px;padding:14px 16px;margin-bottom:14px;max-height:260px;overflow-y:auto;font-size:12.5px;line-height:1.7}
+  .parse-preview table{width:100%;border-collapse:collapse;font-size:12px}
+  .parse-preview th{background:#e8ecf1;padding:5px 8px;text-align:left;font-weight:600;color:var(--ink)}
+  .parse-preview td{padding:5px 8px;border-bottom:1px solid #eee;color:var(--sub)}
+  .map-section{margin-bottom:14px}
+  .map-section h4{font-size:13px;font-weight:700;margin-bottom:8px}
+  .map-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12.5px}
+  .map-row .src{color:var(--sub);min-width:140px}
+  .map-row select{padding:4px 8px;border-radius:6px;border:1px solid var(--line);font-size:12.5px}
+  .action-btns{display:flex;gap:10px;margin-top:18px}
+  .btn-primary{background:var(--brand);color:#fff;border:none;padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-primary:hover{background:#29b6f6}
+  .btn-secondary{background:#fff;color:var(--ink);border:1px solid var(--line);padding:8px 20px;border-radius:8px;font-size:13px;cursor:pointer}
+  .btn-secondary:hover{background:var(--bg)}
+  .upload-status{padding:10px 14px;border-radius:8px;font-size:12.5px;margin-top:12px;display:none}
+  .upload-status.ok{display:block;background:#e8f5e9;color:#2e7d32}
+  .upload-status.err{display:block;background:#ffebee;color:#c62828}
+  .tab-sub{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--line)}
+  .tab-sub button{flex:1;padding:8px 0;font-size:12.5px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--sub)}
+  .tab-sub button.active{border-bottom-color:var(--brand);color:var(--brand)}
+  .step-indicator{display:flex;gap:6px;margin-bottom:18px}
+  .step-ind{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
+  .step-ind.done{background:#e8f5e9;color:#2e7d32}
+  .step-ind.todo{background:var(--bg);color:var(--sub)}
+  .step-ind.active{background:#e3f2fd;color:#1565c0}
+
   @media(max-width:900px){
     .summary-grid{grid-template-columns:repeat(2,1fr)}
     .charts-grid{grid-template-columns:1fr}
     .games-grid{grid-template-columns:1fr}
     .bar .bl{width:140px}
     .json-viewer{font-size:11.5px;padding:12px}
+    .modal{width:98vw;padding:18px 14px}
   }
 </style>
 </head>
@@ -173,7 +217,8 @@
   <h1>🛡️ 暑期未成年人保护观察 · <span>2026</span></h1>
   <div class="header-right">
     <span class="last-date" id="lastUpdate">数据加载中…</span>
-    <button class="refresh-btn" onclick="loadAll()">🔄 刷新数据</button>
+    <button class="refresh-btn" onclick="loadAll()">🔄 刷新</button>
+    <button class="upload-btn" onclick="openUploadModal()">📤 上传数据</button>
   </div>
 </header>
 
@@ -252,6 +297,75 @@
   <div style="max-width:1280px;margin:0 auto;padding:0 24px">
     <h2 class="sec">📰 日报 / 周报 <small>未成年人保护动态报告</small></h2>
     <div id="reports-container"><div class="loading">加载中…</div></div>
+  </div>
+</div>
+
+<!-- ===== 数据上传弹窗 ===== -->
+<div class="modal-mask" id="uploadMask">
+  <div class="modal">
+    <button class="close-btn" onclick="closeUploadModal()">✕</button>
+    <h2>📤 上传数据生成看板</h2>
+
+    <!-- 步骤指示器 -->
+    <div class="step-indicator" id="uploadSteps">
+      <span class="step-ind todo" id="step1">① 上传文件</span>
+      <span class="step-ind todo" id="step2">② 预览解析</span>
+      <span class="step-ind todo" id="step3">③ 生成数据</span>
+    </div>
+
+    <!-- 子 Tab -->
+    <div class="tab-sub" id="uploadTabBar" style="display:none">
+      <button class="active" onclick="switchUploadTab('preview',this)">📋 数据预览</button>
+      <button onclick="switchUploadTab('mapping',this)">🔗 字段映射</button>
+      <button onclick="switchUploadTab('output',this)">📄 生成结果</button>
+    </div>
+
+    <!-- Step1：上传区域 -->
+    <div id="uploadStep1">
+      <div class="drop-zone" id="dropZone">
+        <div class="dz-icon">📂</div>
+        <div class="dz-text">拖拽文件到此处，或 <b>点击选择文件</b></div>
+        <div class="dz-hint">支持 .xlsx / .xls / .csv / .json / .txt</div>
+      </div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.json,.txt" style="display:none">
+      <div class="file-info" id="fileInfo" style="display:none">
+        📄 <span class="fi-name" id="fileName"></span>
+        <span id="fileSize"></span>
+      </div>
+    </div>
+
+    <!-- Step2：预览解析 -->
+    <div id="uploadStep2" style="display:none">
+      <div class="parse-review" id="parseReview">
+        <div style="color:var(--sub);text-align:center;padding:20px">请先上传文件</div>
+      </div>
+    </div>
+
+    <!-- Step3：字段映射 + 生成 -->
+    <div id="uploadStep3" style="display:none">
+      <div class="map-section">
+        <h4>🔗 字段映射（可选，系统将自动识别）</h4>
+        <div id="mappingArea" style="margin-top:10px"></div>
+      </div>
+      <div class="map-section">
+        <h4>🎯 生成目标</h4>
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <label style="font-size:12.5px;display:flex;align-items:center;gap:5px;cursor:pointer">
+            <input type="checkbox" id="genBoard" checked> 生成 watchboard-data.json（深度看板）
+          </label>
+          <label style="font-size:12.5px;display:flex;align-items:center;gap:5px;cursor:pointer">
+            <input type="checkbox" id="genDashboard" checked> 生成 data.json（仪表盘）
+          </label>
+        </div>
+      </div>
+      <div id="genPreview" style="margin-top:12px"></div>
+    </div>
+
+    <div class="action-btns" id="uploadActions">
+      <button class="btn-secondary" onclick="closeUploadModal()">取消</button>
+      <button class="btn-primary" id="nextBtn" onclick="uploadNext()">下一步 →</button>
+    </div>
+    <div class="upload-status" id="uploadStatus"></div>
   </div>
 </div>
 
@@ -627,6 +741,250 @@ function renderValidate(){
   } else {
     el.innerHTML = '<div style="background:#fff8e1;color:#e65100;padding:14px 18px;border-radius:10px;font-size:13px;line-height:2">' + issues.join('<br>') + '</div>';
   }
+}
+
+// ===== 数据上传弹窗 =====
+let uploadState = { file:null, rawData:null, parsedRows:[], target:'board' };
+
+function openUploadModal(){
+  document.getElementById('uploadMask').classList.add('show');
+  resetUpload();
+}
+function closeUploadModal(){
+  document.getElementById('uploadMask').classList.remove('show');
+}
+function resetUpload(){
+  uploadState = { file:null, rawData:null, parsedRows:[], target:'board' };
+  ['uploadStep1','uploadStep2','uploadStep3'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('uploadStep1').style.display='block';
+  document.getElementById('uploadTabBar').style.display='none';
+  document.getElementById('nextBtn').textContent='下一步 →';
+  document.getElementById('uploadStatus').className='upload-status';
+  document.getElementById('uploadStatus').style.display='none';
+  setStep(1);
+}
+
+// 步骤指示器
+function setStep(n){
+  for(let i=1;i<=3;i++){
+    const el = document.getElementById('step'+i);
+    el.className = 'step-ind ' + (i<n?'done':i===n?'active':'todo');
+  }
+}
+
+// 拖拽 + 点击上传
+(function initDropZone(){
+  const dz = document.getElementById('dropZone');
+  const fi = document.getElementById('fileInput');
+  dz.onclick = ()=>fi.click();
+  fi.onchange = ()=>{ if(fi.files[0]) handleFile(fi.files[0]); };
+  dz.ondragover = e=>{ e.preventDefault(); dz.classList.add('dragover'); };
+  dz.ondragleave = ()=> dz.classList.remove('dragover');
+  dz.ondrop = e=>{
+    e.preventDefault(); dz.classList.remove('dragover');
+    if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  };
+})();
+
+async function handleFile(file){
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileSize').textContent = '（'+ (file.size>1024*1024? (file.size/1024/1024).toFixed(1)+' MB' : (file.size/1024).toFixed(0)+' KB') + '）';
+  document.getElementById('fileInfo').style.display='flex';
+  uploadState.file = file;
+
+  const ext = file.name.split('.').pop().toLowerCase();
+  try{
+    if(ext==='json'){
+      const text = await file.text();
+      uploadState.rawData = JSON.parse(text);
+      uploadState.jsonType = 'json';
+    } else if(ext==='csv' || ext==='txt'){
+      const text = await file.text();
+      uploadState.rawData = text;
+      uploadState.jsonType = 'csv';
+    } else if(ext==='xlsx'||ext==='xls'){
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      uploadState.rawData = XLSX.utils.sheet_to_json(ws, {defval:''});
+      uploadState.jsonType = 'xlsx';
+    } else {
+      throw new Error('不支持的文件格式：'+ext);
+    }
+    showParsePreview();
+    document.getElementById('uploadStatus').className='upload-status ok';
+    document.getElementById('uploadStatus').textContent='✅ 文件解析成功';
+    document.getElementById('uploadStatus').style.display='block';
+  } catch(e){
+    document.getElementById('uploadStatus').className='upload-status err';
+    document.getElementById('uploadStatus').textContent='❌ 解析失败：'+e.message;
+    document.getElementById('uploadStatus').style.display='block';
+  }
+}
+
+// 解析预览
+function showParsePreview(){
+  const data = uploadState.rawData;
+  let html = '';
+  if(Array.isArray(data)){
+    // Excel/CSV 解析结果：二维表
+    const keys = Object.keys(data[0]||{});
+    html += '<p style="font-size:12px;color:var(--sub);margin-bottom:8px">✅ 识别为表格数据，共 '+data.length+' 行，字段：'+keys.join('、')+'</p>';
+    html += '<table><thead><tr>';
+    keys.slice(0,6).forEach(k=>html+=`<th>${esc(k)}</th>`);
+    if(keys.length>6) html+=`<th>…等${keys.length}个字段</th>`;
+    html += '</tr></thead><tbody>';
+    data.slice(0,5).forEach(row=>{
+      html += '<tr>';
+      keys.slice(0,6).forEach(k=>html+=`<td>${esc(String(row[k]||'').slice(0,40))}</td>`);
+      if(keys.length>6) html+=`<td>…</td>`;
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    if(data.length>5) html += '<div style="font-size:11px;color:var(--sub);margin-top:6px">（仅展示前5行）</div>';
+  } else if(typeof data==='object'){
+    // JSON 对象
+    html += '<p style="font-size:12px;color:var(--sub);margin-bottom:8px">✅ 识别为 JSON 对象</p>';
+    html += '<pre style="background:#1e1e2e;color:#cdd6f4;padding:12px;border-radius:8px;font-size:11.5px;line-height:1.6;overflow:auto;max-height:200px">'+syntaxHighlight(JSON.stringify(data,null,2))+'</pre>';
+  } else {
+    html += '<p style="color:var(--sub)">文本数据，共 '+data.length+' 字符</p>';
+  }
+  document.getElementById('parseReview').innerHTML = html;
+}
+
+// 下一步
+function uploadNext(){
+  const cur = document.getElementById('nextBtn').textContent.includes('下一步') ?
+    (document.getElementById('uploadStep1').style.display!=='none'?1:
+     document.getElementById('uploadStep2').style.display!=='none'?2:3) : 99;
+  // 简化：用 step 状态
+  const step1Vis = document.getElementById('uploadStep1').style.display!=='none';
+  // 直接判断当前可见的 step
+  let curStep = 1;
+  if(document.getElementById('uploadStep2').style.display!=='none') curStep=2;
+  if(document.getElementById('uploadStep3').style.display!=='none') curStep=3;
+
+  if(curStep===1){
+    if(!uploadState.file){ alert('请先上传文件'); return; }
+    // 进入 step2
+    document.getElementById('uploadStep1').style.display='none';
+    document.getElementById('uploadStep2').style.display='block';
+    document.getElementById('uploadTabBar').style.display='flex';
+    document.getElementById('nextBtn').textContent='生成数据 →';
+    setStep(2);
+  } else if(curStep===2){
+    // 进入 step3：生成数据
+    document.getElementById('uploadStep2').style.display='none';
+    document.getElementById('uploadStep3').style.display='block';
+    document.getElementById('nextBtn').textContent='⬇️ 下载 JSON 文件';
+    setStep(3);
+    generateOutput();
+  } else {
+    // 下载
+    downloadGenerated();
+  }
+}
+
+// 生成输出
+function generateOutput(){
+  const data = uploadState.rawData;
+  const genBoard = document.getElementById('genBoard').checked;
+  const genDash = document.getElementById('genDashboard').checked;
+  let results = [];
+
+  if(Array.isArray(data)){
+    // 表格数据：尝试自动映射为 watchboard-data.json 格式
+    const keys = Object.keys(data[0]||{});
+    const lowerKeys = keys.map(k=>k.toLowerCase());
+
+    // 自动识别游戏名列
+    const gameKey = keys.find(k=>/游戏|game|产品|名称|name/i.test(k));
+    const titleKey = keys.find(k=>/标题|title|事件|内容|舆情/i.test(k));
+    const dateKey = keys.find(k=>/日期|date|时间|time/i.test(k));
+    const catKey = keys.find(k=>/类别|category|分类|类型|type/i.test(k));
+    const sevKey = keys.find(k=>/严重|severity|等级|风险|程度/i.test(k));
+    const urlKey = keys.find(k=>/url|链接|link|地址/i.test(k));
+
+    if(genBoard){
+      // 生成 watchboard-data.json 结构
+      const games = [...new Set(data.map(r=>gameKey?r[gameKey]:'未知游戏'))];
+      const wbObj = {
+        meta:{ updateDate:new Date().toISOString().slice(0,10), updatePerson:'上传导入', note:'通过看板上传功能生成' },
+        alerts: games.map(g=>({ game:g, level:'yellow', text:g+' 数据已导入，请手动完善预警信息' })),
+        timeline: [],
+        games: games.map(g=>{
+          const rows = data.filter(r=>gameKey&&r[gameKey]===g);
+          return {
+            name:g, icon:'🎮', color:'#4fc3f7',
+            channels:[],
+            views: keys.filter(k=>/观点|观点聚类|渠道/i.test(k)?{name:k,children:[]}:[],
+            cases: rows.filter(r=>titleKey).map(r=>({
+              title: String(r[titleKey]||''),
+              source: urlKey&&r[urlKey]? String(r[urlKey]) : '',
+              summary: '',
+              risk: sevKey&&r[sevKey]? String(r[sevKey]) : '中'
+            }))
+          };
+        }),
+        commonTopics:[]
+      };
+      results.push({ name:'watchboard-data.json', content:JSON.stringify(wbObj,null,2) });
+    }
+
+    if(genDash){
+      const dashObj = {
+        lastUpdate: new Date().toISOString().slice(0,10),
+        trendWeeks:[],
+        games: games.map(g=>{
+          const rows = data.filter(r=>gameKey&&r[gameKey]===g);
+          return { name:g, eventCount:rows.length, highRiskCount:0, weeklyCounts:[] };
+        }),
+        recentEvents: data.filter(r=>titleKey).map(r=>({
+          date: dateKey&&r[dateKey]? String(r[dateKey]).slice(0,10) : new Date().toISOString().slice(0,10),
+          game: gameKey? String(r[gameKey]) : '',
+          title: titleKey? String(r[titleKey]) : '',
+          category: catKey? String(r[catKey]) : '风险',
+          severity: sevKey? String(r[sevKey]) : '中',
+          url: urlKey? String(r[urlKey]) : ''
+        }))
+      };
+      results.push({ name:'data.json', content:JSON.stringify(dashObj,null,2) });
+    }
+
+    let html = '<div style="display:flex;flex-direction:column;gap:10px">';
+    results.forEach(r=>{
+      html += `<div style="background:var(--bg);border-radius:8px;padding:12px 14px;font-size:12.5px">
+        <b>✅ ${r.name}</b> —— 已生成（${r.content.length.toLocaleString()} 字符）
+        <button onclick="downloadGen('${r.name}',this)" style="margin-left:10px;font-size:11px;padding:3px 10px;border-radius:5px;border:1px solid var(--line);background:#fff;cursor:pointer">⬇️ 下载</button>
+        </div>`;
+    });
+    html += '</div>';
+    document.getElementById('genPreview').innerHTML = html;
+    // 存到全局方便下载
+    window.__genResults = results;
+
+  } else {
+    document.getElementById('genPreview').innerHTML = '<div style="color:var(--sub);padding:20px">当前仅支持表格格式（Excel/CSV）自动生成，请上传结构化数据。</div>';
+  }
+}
+
+function downloadGen(name,btn){
+  const r = (window.__genResults||[]).find(x=>x.name===name);
+  if(!r) return;
+  const blob = new Blob([r.content],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function downloadGenerated(){
+  (window.__genResults||[]).forEach(r=> downloadGen(r.name,null));
+}
+
+// Tab 切换（弹窗内部）
+function switchUploadTab(name,btn){
+  document.querySelectorAll('#uploadTabBar button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
 }
 
 // ===== 启动 =====
