@@ -18,26 +18,26 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink)}
 
-  /* ========== 顶部导航 ========== */
+  /* ========= 顶部导航 ========= */
   header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);color:#fff;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
   header h1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
   header h1 span{color:var(--brand)}
   .header-right{display:flex;align-items:center;gap:12px}
-  .last-update{font-size:12px;color:#90a4ae}
+  .last-date{font-size:12px;color:#90a4ae}
   .refresh-btn{background:var(--brand);color:var(--brand-dark);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600}
   .refresh-btn:hover{background:#29b6f6}
 
-  /* ========== Tab 栏 ========== */
+  /* ========= Tab 栏 ========= */
   .tab-bar{background:#fff;padding:0 32px;border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:99;display:flex;gap:0}
   .tab-btn{padding:12px 20px;font-size:14px;font-weight:600;color:var(--sub);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none}
   .tab-btn:hover{color:var(--ink)}
   .tab-btn.active{color:var(--brand);border-bottom-color:var(--brand)}
-  
-  /* ========== 内容区 ========== */
+
+  /* ========= 内容区 ========= */
   .tab-content{display:none;padding:24px;max-width:1280px;margin:0 auto}
   .tab-content.active{display:block}
 
-  /* ========== 仪表盘视图 ========== */
+  /* ========= 仪表盘视图 ========= */
   .container{max-width:1280px;margin:0 auto;padding:24px}
   .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
   .game-card{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);border-top:4px solid var(--brand);position:relative}
@@ -74,9 +74,8 @@
   .severity-low{color:#2e7d32}
 
   .compare-section{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow)}
-  .compare-section h3{font-size:14px;color:#546e7a;margin-bottom:12px}
 
-  /* ========== 深度看板视图 ========== */
+  /* ========= 深度看板视图 ========= */
   .sec{font-size:16px;font-weight:700;margin:34px 0 14px;padding-left:11px;border-left:4px solid var(--brand);display:flex;align-items:center;gap:8px}
   .sec:first-child{margin-top:0}
   .sec small{font-weight:400;color:var(--sub);font-size:12px}
@@ -98,7 +97,7 @@
   .tl-date{font-weight:700;color:var(--brand);font-size:13px}
   .tl-name{font-size:12.5px;font-weight:600;margin:3px 0 8px}
   .tl-h{font-size:11.5px;color:var(--sub);background:var(--bg);padding:7px 9px;border-radius:7px;margin-bottom:6px;flex:1 1 auto}
-  .tl-a{font-size:11.5px;color:#0d7a4e;background:var(--greenbg);padding:7px 9px;border-radius:7px;margin-top:auto}
+  .tl-a{font-size:11.5px;color:#2e7d32;background:var(--greenbg);padding:7px 9px;border-radius:7px;margin-top:auto}
   .tl-a.todo{color:var(--sub);background:var(--bg)}
   .tl-lbl{font-size:10px;color:#9aa3b8;display:block;margin-bottom:2px;font-weight:600}
 
@@ -132,6 +131,22 @@
   .ct .gg{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
   .ct .gg span{font-size:10.5px;background:#eef2fd;color:var(--brand);padding:2px 8px;border-radius:6px;font-weight:600}
 
+  /* ========= 原始数据视图 ========= */
+  .raw-section{margin-bottom:32px}
+  .raw-section h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+  .raw-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .raw-btn{font-size:12px;padding:5px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600}
+  .raw-btn:hover{background:var(--bg)}
+  .raw-btn.primary{background:var(--brand);color:var(--brand-dark);border-color:var(--brand)}
+  .raw-btn.primary:hover{background:#29b6f6}
+  .json-viewer{background:#1e1e2e;color:#cdd6f4;border-radius:12px;padding:20px;font-size:13px;line-height:1.7;overflow-x:auto;font-family:'Cascadia Code','Fira Code','Consolas',monospace;max-height:600px;overflow-y:auto}
+  .json-viewer .jk{color:#89b4fa}.json-viewer .js{color:#f9e2af}.json-viewer .jstr{color:#a6e3a1}.json-viewer .jnum{color:#fab387}.json-viewer .jbool{color:#cba6f7}.json-viewer .jnull{color:#f38ba8}.json-viewer .jarr{color:#94e2d5}
+  .json-error{background:#fff0f0;color:#c62828;padding:16px;border-radius:12px;font-size:13px}
+
+  .raw-meta{display:flex;gap:24px;margin-bottom:16px;flex-wrap:wrap}
+  .raw-meta .rm{font-size:12.5px;color:var(--sub)}
+  .raw-meta .rm b{color:var(--ink)}
+
   .loading{text-align:center;padding:60px 20px;color:var(--sub);font-size:15px}
   .err{text-align:center;padding:60px 20px;color:var(--red);font-size:14px}
 
@@ -142,27 +157,29 @@
     .charts-grid{grid-template-columns:1fr}
     .games-grid{grid-template-columns:1fr}
     .bar .bl{width:140px}
+    .json-viewer{font-size:11.5px;padding:12px}
   }
 </style>
 </head>
 <body>
 
-<!-- ========== 顶部 ========== -->
+<!-- ========= 顶部 ========= -->
 <header>
   <h1>🛡️ 暑期未成年人保护观察 · <span>2026</span></h1>
   <div class="header-right">
-    <span class="last-update" id="lastUpdate">数据加载中…</span>
+    <span class="last-date" id="lastUpdate">数据加载中…</span>
     <button class="refresh-btn" onclick="loadAll()">🔄 刷新数据</button>
   </div>
 </header>
 
-<!-- ========== Tab 栏 ========== -->
+<!-- ========= Tab 栏 ========= -->
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('dashboard')">📊 仪表盘</button>
-  <button class="tab-btn" onclick="switchTab('watchboard')">📋 深度看板</button>
+  <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 仪表盘</button>
+  <button class="tab-btn" onclick="switchTab('watchboard',this)">📋 深度看板</button>
+  <button class="tab-btn" onclick="switchTab('rawdata',this)">🗂️ 原始数据</button>
 </div>
 
-<!-- ========== Tab1：仪表盘 ========== -->
+<!-- ========= Tab1：仪表盘 ========= -->
 <div class="tab-content active" id="tab-dashboard">
   <div class="container">
     <div class="summary-grid" id="summaryGrid"><div class="loading">加载中…</div></div>
@@ -183,7 +200,7 @@
   </div>
 </div>
 
-<!-- ========== Tab2：深度看板 ========== -->
+<!-- ========= Tab2：深度看板 ========= -->
 <div class="tab-content" id="tab-watchboard">
   <div style="max-width:1280px;margin:0 auto;padding:0 24px">
     <h2 class="sec">🚨 本期预警 <small>状态灯：红=预警 / 黄=关注 / 绿=平稳</small></h2>
@@ -202,23 +219,57 @@
   </div>
 </div>
 
+<!-- ========= Tab3：原始数据 ========= -->
+<div class="tab-content" id="tab-rawdata">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px">
+    <div class="raw-meta" id="rawMeta"></div>
+    <div class="raw-section">
+      <h3>📄 data.json <span style="font-weight:400;font-size:12px;color:var(--sub)">仪表盘数据源</span></h3>
+      <div class="raw-actions">
+        <button class="raw-btn primary" onclick="downloadRaw('data')">⬇️ 下载 data.json</button>
+        <button class="raw-btn" onclick="copyRaw('data')">📋 复制内容</button>
+        <button class="raw-btn" onclick="toggleWrap('rawDataOut')">↩️ 切换换行</button>
+      </div>
+      <pre class="json-viewer" id="rawDataOut" style="white-space:pre">加载中…</pre>
+    </div>
+    <div class="raw-section">
+      <h3>📄 watchboard-data.json <span style="font-weight:400;font-size:12px;color:var(--sub)">深度看板数据源</span></h3>
+      <div class="raw-actions">
+        <button class="raw-btn primary" onclick="downloadRaw('watchboard')">⬇️ 下载 watchboard-data.json</button>
+        <button class="raw-btn" onclick="copyRaw('watchboard')">📋 复制内容</button>
+        <button class="raw-btn" onclick="toggleWrap('rawWbOut')">↩️ 切换换行</button>
+      </div>
+      <pre class="json-viewer" id="rawWbOut" style="white-space:pre">加载中…</pre>
+    </div>
+    <div class="raw-section">
+      <h3>📊 数据校验</h3>
+      <div id="rawValidate" class="loading">加载中…</div>
+    </div>
+  </div>
+</div>
+
 <script>
-// ========== 全局状态 ==========
-let D = null; // 合并后的数据
+// ========= 全局状态 ==========
+let D = null;           // 合并后的数据
+let rawDataText = '';   // data.json 原始文本
+let rawWbText = '';     // watchboard-data.json 原始文本
 let trendChart = null, riskPie = null, compareChart = null;
 const LV = {red:'red',yellow:'yellow',green:'green'};
 const LVTXT = {red:'预警',yellow:'关注',green:'平稳'};
 const esc = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 
-// ========== Tab 切换 ==========
-function switchTab(name){
+// ========= Tab 切换 ==========
+function switchTab(name, btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  event.target.classList.add('active');
+  if(btn) btn.classList.add('active');
+  else document.querySelector(`.tab-btn[onclick*="${name}"]`).classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
+  // 切换到原始数据 Tab 时渲染
+  if(name==='rawdata') renderRawData();
 }
 
-// ========== 加载数据 ==========
+// ========= 加载数据 ==========
 async function loadAll(){
   const paths = ['./data.json','./watchboard-data.json'];
   let merged = { _sources:[] };
@@ -226,7 +277,18 @@ async function loadAll(){
   for(const p of paths){
     try{
       const r = await fetch(p+'?t='+Date.now());
-      if(r.ok){ const j = await r.json(); Object.assign(merged, j); merged._sources.push(p); ok++; }
+      if(r.ok){
+        const j = await r.json();
+        Object.assign(merged, j);
+        merged._sources.push(p);
+        // 保存原始文本
+        if(p.includes('watchboard')){
+          rawWbText = JSON.stringify(j, null, 2);
+        } else {
+          rawDataText = JSON.stringify(j, null, 2);
+        }
+        ok++;
+      }
     }catch(e){}
   }
   if(ok===0){
@@ -237,9 +299,11 @@ async function loadAll(){
   renderDashboard();
   renderWatchboard();
   document.getElementById('lastUpdate').textContent = '最后更新：' + (D.lastUpdate||D.meta?.updateDate||'—');
+  // 如果当前在原始数据 Tab，也刷新
+  if(document.getElementById('tab-rawdata').classList.contains('active')) renderRawData();
 }
 
-// ========== 仪表盘渲染 ==========
+// ========= 仪表盘渲染 ==========
 function renderDashboard(){
   if(!D) return;
   renderSummary();
@@ -331,12 +395,10 @@ function renderCompare(){
   });
 }
 
-// ========== 深度看板渲染 ==========
+// ========= 深度看板渲染 ==========
 function renderWatchboard(){
   if(!D) return;
-  // meta header
   const meta = D.meta || {};
-  // alerts
   const aBox = document.getElementById('wb-alerts');
   const alerts = D.alerts || [];
   if(alerts.length>0){
@@ -348,7 +410,6 @@ function renderWatchboard(){
       </div>`).join('');
   } else aBox.innerHTML = '<div style="color:var(--sub);padding:12px">暂无预警数据</div>';
 
-  // timeline
   const tBox = document.getElementById('wb-timeline');
   const tl = D.timeline || [];
   if(tl.length>0){
@@ -363,7 +424,6 @@ function renderWatchboard(){
     }).join('');
   } else tBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无时间轴数据</div>';
 
-  // games
   const gBox = document.getElementById('wb-games');
   const games = D.games || [];
   if(games.length>0){
@@ -400,7 +460,6 @@ function renderWatchboard(){
     }).join('');
   } else gBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无游戏数据</div>';
 
-  // common topics
   const cBox = document.getElementById('wb-ctopics');
   const cts = D.commonTopics || [];
   if(cts.length>0){
@@ -412,13 +471,132 @@ function renderWatchboard(){
       </div>`).join('');
   } else cBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无共性议题数据</div>';
 
-  // footer
   document.getElementById('wb-footer').innerHTML =
     `本看板数据每周更新 · 数据来源：舆情监测系统导入 + Feedly MCP 监控<br>`+
     `最后更新：${esc(D.meta?.updateDate||D.lastUpdate||'—')}`;
 }
 
-// ========== 启动 ==========
+// ========= 原始数据渲染 ==========
+function renderRawData(){
+  // data.json
+  const el1 = document.getElementById('rawDataOut');
+  if(rawDataText){
+    el1.innerHTML = syntaxHighlight(rawDataText);
+  } else {
+    el1.innerHTML = '<div class="json-error">⚠️ data.json 加载失败或为空</div>';
+  }
+
+  // watchboard-data.json
+  const el2 = document.getElementById('rawWbOut');
+  if(rawWbText){
+    el2.innerHTML = syntaxHighlight(rawWbText);
+  } else {
+    el2.innerHTML = '<div class="json-error">⚠️ watchboard-data.json 加载失败或为空</div>';
+  }
+
+  // 元信息
+  const metaEl = document.getElementById('rawMeta');
+  const dataTime = D?.lastUpdate || D?.meta?.updateDate || '—';
+  metaEl.innerHTML = `
+    <div class="rm"><b>data.json</b>：${rawDataText?rawDataText.length.toLocaleString()+' 字符':'未加载'}</div>
+    <div class="rm"><b>watchboard-data.json</b>：${rawWbText?rawWbText.length.toLocaleString()+' 字符':'未加载'}</div>
+    <div class="rm"><b>最后更新</b>：${dataTime}</div>
+    <div class="rm"><b>游戏数量</b>：${(D?.games||[]).length} 款</div>
+  `;
+
+  // 数据校验
+  renderValidate();
+}
+
+function syntaxHighlight(json){
+  // 简单 JSON 语法高亮
+  const escaped = esc(json);
+  return escaped
+    // 键名
+    .replace(/("[\w\u4e00-\u9fff]+")\s*:/g, '<span class="jk">$1</span>:')
+    // 字符串值
+    .replace(/:\s*("(?:[^"\\]|\\.)*")(,?)/g, (m,s,t)=>`: <span class="jstr">${s}</span>${t}`)
+    // 数字
+    .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="jnum">$1</span>')
+    // 布尔
+    .replace(/:\s*(true|false)/g, ': <span class="jbool">$1</span>')
+    // null
+    .replace(/:\s*(null)/g, ': <span class="jnull">$1</span>')
+    // 数组/对象括号
+    .replace(/([\[\]{}])/g, '<span class="jarr">$1</span>');
+}
+
+function downloadRaw(type){
+  const text = type==='data' ? rawDataText : rawWbText;
+  const name = type==='data' ? 'data.json' : 'watchboard-data.json';
+  const blob = new Blob([text], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function copyRaw(type){
+  const text = type==='data' ? rawDataText : rawWbText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target;
+    const prev = btn.textContent;
+    btn.textContent = '✅ 已复制';
+    setTimeout(()=>btn.textContent=prev,1500);
+  });
+}
+
+function toggleWrap(id){
+  const el = document.getElementById(id);
+  el.style.whiteSpace = el.style.whiteSpace==='pre' ? 'pre-wrap' : 'pre';
+}
+
+// ========= 数据校验 ==========
+function renderValidate(){
+  const el = document.getElementById('rawValidate');
+  if(!D){ el.innerHTML = '<div class="json-error">数据未加载</div>'; return; }
+
+  const issues = [];
+  const games = D.games || [];
+
+  // 检查 games 数组
+  if(games.length===0) issues.push('⚠️ games 数组为空');
+  games.forEach((g,i)=>{
+    if(!g.name) issues.push(`⚠️ games[${i}].name 缺失`);
+    if(g.weeklyCounts && D.trendWeeks){
+      if(g.weeklyCounts.length !== D.trendWeeks.length){
+        issues.push(`⚠️ ${g.name}：weeklyCounts 长度（${g.weeklyCounts.length}）与 trendWeeks 长度（${D.trendWeeks.length}）不一致`);
+      }
+    }
+  });
+
+  // 检查 trendWeeks
+  if(!D.trendWeeks || D.trendWeeks.length===0) issues.push('⚠️ trendWeeks 为空');
+
+  // 检查 alerts
+  const alerts = D.alerts || [];
+  alerts.forEach((a,i)=>{
+    if(!a.game) issues.push(`⚠️ alerts[${i}].game 缺失`);
+    if(!a.level) issues.push(`⚠️ alerts[${i}].level 缺失`);
+  });
+
+  // 检查 timeline
+  const tl = D.timeline || [];
+  tl.forEach((t,i)=>{
+    if(t.actual && (t.actual.startsWith('（待填') || t.actual.startsWith('(待填'))){
+      issues.push(`📝 时间轴「${t.node||i}」的"本期实际"待填写`);
+    }
+  });
+
+  if(issues.length===0){
+    el.innerHTML = '<div style="background:#e8f5e9;color:#2e7d32;padding:14px 18px;border-radius:10px;font-size:13.5px">✅ 数据校验通过，未发现明显问题</div>';
+  } else {
+    el.innerHTML = '<div style="background:#fff8e1;color:#e65100;padding:14px 18px;border-radius:10px;font-size:13px;line-height:2">' + issues.join('<br>') + '</div>';
+  }
+}
+
+// ========= 启动 ==========
 loadAll();
 setInterval(loadAll, 10*60*1000);
 </script>
