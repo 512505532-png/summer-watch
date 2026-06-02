@@ -3,239 +3,424 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>暑期未成年人保护观察仪表盘 · 2026</title>
+<title>暑期未成年人保护观察 · 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f0f4f8; color: #1a1a2e; }
-  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
-  header h1 { font-size: 20px; font-weight: 600; }
-  header h1 span { color: #4fc3f7; }
-  .meta { font-size: 13px; color: #90a4ae; }
-  .refresh-btn { background: #4fc3f7; color: #1a1a2e; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
-  .refresh-btn:hover { background: #29b6f6; }
+  :root{
+    --bg:#f0f4f8; --card:#ffffff; --ink:#1a1a2e; --sub:#90a4ae;
+    --brand:#4fc3f7; --brand-dark:#1a1a2e;
+    --red:#ef5350; --redbg:#ffebee;
+    --yellow:#ff9800; --yellowbg:#fff8e1;
+    --green:#66bb6a; --greenbg:#e8f5e9;
+    --line:#e0e0e0;
+    --shadow:0 1px 4px rgba(0,0,0,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink)}
 
-  .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+  /* ========== 顶部导航 ========== */
+  header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);color:#fff;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+  header h1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+  header h1 span{color:var(--brand)}
+  .header-right{display:flex;align-items:center;gap:12px}
+  .last-update{font-size:12px;color:#90a4ae}
+  .refresh-btn{background:var(--brand);color:var(--brand-dark);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600}
+  .refresh-btn:hover{background:#29b6f6}
 
-  /* 总览卡片 */
-  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-  .game-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 4px solid #4fc3f7; position: relative; }
-  .game-card.risk-high   { border-top-color: #ef5350; }
-  .game-card.risk-medium { border-top-color: #ff9800; }
-  .game-card.risk-low    { border-top-color: #66bb6a; }
-  .game-card h2 { font-size: 15px; color: #546e7a; margin-bottom: 8px; }
-  .game-card .kpi { font-size: 32px; font-weight: 700; color: #1a1a2e; }
-  .game-card .kpi-label { font-size: 12px; color: #90a4ae; margin-top: 2px; }
-  .game-card .trend { font-size: 13px; margin-top: 8px; }
-  .trend.up   { color: #ef5350; }
-  .trend.down { color: #66bb6a; }
-  .trend.flat { color: #90a4ae; }
-  .risk-badge { position: absolute; top: 16px; right: 16px; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
-  .risk-badge.high   { background: #ffebee; color: #c62828; }
-  .risk-badge.medium { background: #fff8e1; color: #e65100; }
-  .risk-badge.low    { background: #e8f5e9; color: #2e7d32; }
+  /* ========== Tab 栏 ========== */
+  .tab-bar{background:#fff;padding:0 32px;border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:99;display:flex;gap:0}
+  .tab-btn{padding:12px 20px;font-size:14px;font-weight:600;color:var(--sub);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none}
+  .tab-btn:hover{color:var(--ink)}
+  .tab-btn.active{color:var(--brand);border-bottom-color:var(--brand)}
+  
+  /* ========== 内容区 ========== */
+  .tab-content{display:none;padding:24px;max-width:1280px;margin:0 auto}
+  .tab-content.active{display:block}
 
-  /* 图表区 */
-  .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
-  .chart-box { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .chart-box h3 { font-size: 14px; color: #546e7a; margin-bottom: 12px; }
+  /* ========== 仪表盘视图 ========== */
+  .container{max-width:1280px;margin:0 auto;padding:24px}
+  .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+  .game-card{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);border-top:4px solid var(--brand);position:relative}
+  .game-card.risk-high{border-top-color:var(--red)}
+  .game-card.risk-medium{border-top-color:var(--yellow)}
+  .game-card.risk-low{border-top-color:var(--green)}
+  .game-card h2{font-size:15px;color:#546e7a;margin-bottom:8px}
+  .game-card .kpi{font-size:32px;font-weight:700;color:var(--ink)}
+  .game-card .kpi-label{font-size:12px;color:var(--sub);margin-top:2px}
+  .game-card .trend{font-size:13px;margin-top:8px}
+  .trend.up{color:var(--red)}.trend.down{color:var(--green)}.trend.flat{color:var(--sub)}
+  .risk-badge{position:absolute;top:16px;right:16px;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+  .risk-badge.high{background:var(--redbg);color:#c62828}
+  .risk-badge.medium{background:var(--yellowbg);color:#e65100}
+  .risk-badge.low{background:var(--greenbg);color:#2e7d32}
 
-  /* 事件表格 */
-  .events-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 24px; }
-  .events-section h3 { font-size: 14px; color: #546e7a; margin-bottom: 12px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { background: #f0f4f8; color: #546e7a; font-weight: 600; padding: 10px 12px; text-align: left; border-bottom: 2px solid #e0e0e0; }
-  td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
-  tr:hover { background: #f8fafc; }
-  .tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; margin-right: 4px; }
-  .tag-policy   { background: #e3f2fd; color: #1565c0; }
-  .tag-industry { background: #f3e5f5; color: #6a1b9a; }
-  .tag-risk     { background: #fce4ec; color: #b71c1c; }
-  .tag-case     { background: #fff8e1; color: #e65100; }
-  .severity-high   { color: #c62828; font-weight: 700; }
-  .severity-medium { color: #e65100; font-weight: 600; }
-  .severity-low    { color: #2e7d32; }
+  .charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px}
+  .chart-box{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+  .chart-box h3{font-size:14px;color:#546e7a;margin-bottom:12px}
 
-  /* 四游戏对比 */
-  .compare-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-  .compare-section h3 { font-size: 14px; color: #546e7a; margin-bottom: 12px; }
+  .events-section{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);margin-bottom:24px}
+  .events-section h3{font-size:14px;color:#546e7a;margin-bottom:12px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:#f0f4f8;color:#546e7a;font-weight:600;padding:10px 12px;text-align:left;border-bottom:2px solid var(--line)}
+  td{padding:10px 12px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+  tr:hover{background:#f8fafc}
+  .tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;margin-right:4px}
+  .tag-policy{background:#e3f2fd;color:#1565c0}
+  .tag-industry{background:#f3e5f5;color:#6a1b9a}
+  .tag-risk{background:#fce4ec;color:#b71c1c}
+  .tag-case{background:#fff8e1;color:#e65100}
+  .severity-high{color:#c62828;font-weight:700}
+  .severity-medium{color:#e65100;font-weight:600}
+  .severity-low{color:#2e7d32}
 
-  .loading { text-align: center; padding: 60px; color: #90a4ae; }
-  .error  { background: #ffebee; color: #c62828; padding: 16px; border-radius: 8px; margin: 16px 0; }
+  .compare-section{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+  .compare-section h3{font-size:14px;color:#546e7a;margin-bottom:12px}
 
-  @media (max-width: 900px) {
-    .summary-grid { grid-template-columns: repeat(2, 1fr); }
-    .charts-grid { grid-template-columns: 1fr; }
+  /* ========== 深度看板视图 ========== */
+  .sec{font-size:16px;font-weight:700;margin:34px 0 14px;padding-left:11px;border-left:4px solid var(--brand);display:flex;align-items:center;gap:8px}
+  .sec:first-child{margin-top:0}
+  .sec small{font-weight:400;color:var(--sub);font-size:12px}
+
+  .alerts{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+  .alert{background:var(--card);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow);border-left:5px solid var(--line);display:flex;flex-direction:column;gap:6px}
+  .alert.red{border-left-color:var(--red)}.alert.yellow{border-left-color:var(--yellow)}.alert.green{border-left-color:var(--green)}
+  .ahead{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+  .dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .dot.red{background:var(--red)}.dot.yellow{background:var(--yellow)}.dot.green{background:var(--green)}
+  .atext{font-size:12.5px;color:var(--sub)}
+  .tag-msg{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
+  .tag-msg.red{background:var(--redbg);color:var(--red)}.tag-msg.yellow{background:var(--yellowbg);color:var(--yellow)}.tag-msg.green{background:var(--greenbg);color:var(--green)}
+
+  .timeline{background:var(--card);border-radius:14px;padding:8px 4px;box-shadow:var(--shadow);overflow-x:auto}
+  .tl-row{display:flex;min-width:820px;align-items:stretch}
+  .tl-node{flex:1;padding:16px 14px;border-right:1px dashed var(--line);display:flex;flex-direction:column}
+  .tl-node:last-child{border-right:none}
+  .tl-date{font-weight:700;color:var(--brand);font-size:13px}
+  .tl-name{font-size:12.5px;font-weight:600;margin:3px 0 8px}
+  .tl-h{font-size:11.5px;color:var(--sub);background:var(--bg);padding:7px 9px;border-radius:7px;margin-bottom:6px;flex:1 1 auto}
+  .tl-a{font-size:11.5px;color:#0d7a4e;background:var(--greenbg);padding:7px 9px;border-radius:7px;margin-top:auto}
+  .tl-a.todo{color:var(--sub);background:var(--bg)}
+  .tl-lbl{font-size:10px;color:#9aa3b8;display:block;margin-bottom:2px;font-weight:600}
+
+  .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(540px,1fr));gap:16px;align-items:start}
+  .gcard{background:var(--card);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+  .ghead{padding:16px 18px;color:#fff;display:flex;justify-content:space-between;align-items:flex-start;min-height:72px}
+  .ghead h3{font-size:17px;font-weight:700}
+  .ghead .pat{font-size:11.5px;opacity:.92;margin-top:4px;max-width:330px}
+  .gstat{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.22);white-space:nowrap}
+  .gbody{padding:14px 18px 18px}
+  .stats{display:flex;gap:22px;margin-bottom:12px}
+  .stat .n{font-size:20px;font-weight:800}.stat .l{font-size:11px;color:var(--sub)}
+  .blk{margin-top:13px}
+  .blk .bt{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+  .bar{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .bar .bl{font-size:11.5px;width:210px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar .bw{flex:1;background:var(--bg);border-radius:5px;height:14px;overflow:hidden}
+  .bar .bf{height:100%;border-radius:5px}
+  .bar .bv{font-size:11px;font-weight:700;width:34px;text-align:right}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:11px;background:var(--bg);padding:4px 9px;border-radius:7px;color:var(--sub)}
+  .chip b{color:var(--ink)}
+  .case{font-size:11.5px;color:var(--sub);padding:5px 0;border-bottom:1px dashed var(--line)}
+  .case:last-child{border:none}.case b{color:var(--red);font-weight:600}
+  .wk{font-size:11.5px;background:var(--bg);padding:8px 10px;border-radius:8px;margin-top:4px;display:flex;gap:8px;align-items:flex-start;min-height:54px}
+
+  .ctopics{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;align-items:stretch}
+  .ct{background:var(--card);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .ct h4{font-size:13.5px;font-weight:700;margin-bottom:6px}
+  .ct p{font-size:12px;color:var(--sub);margin-bottom:9px;flex:1 1 auto}
+  .ct .gg{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
+  .ct .gg span{font-size:10.5px;background:#eef2fd;color:var(--brand);padding:2px 8px;border-radius:6px;font-weight:600}
+
+  .loading{text-align:center;padding:60px 20px;color:var(--sub);font-size:15px}
+  .err{text-align:center;padding:60px 20px;color:var(--red);font-size:14px}
+
+  .wb-footer{margin-top:40px;text-align:center;color:#9aa3b8;font-size:11.5px;line-height:1.8;padding-bottom:40px}
+
+  @media(max-width:900px){
+    .summary-grid{grid-template-columns:repeat(2,1fr)}
+    .charts-grid{grid-template-columns:1fr}
+    .games-grid{grid-template-columns:1fr}
+    .bar .bl{width:140px}
   }
 </style>
 </head>
 <body>
 
+<!-- ========== 顶部 ========== -->
 <header>
-  <div>
-    <h1>🛡️ 暑期未成年人保护观察仪表盘 · <span>2026</span></h1>
-    <div class="meta" id="lastUpdate">数据加载中…</div>
+  <h1>🛡️ 暑期未成年人保护观察 · <span>2026</span></h1>
+  <div class="header-right">
+    <span class="last-update" id="lastUpdate">数据加载中…</span>
+    <button class="refresh-btn" onclick="loadAll()">🔄 刷新数据</button>
   </div>
-  <button class="refresh-btn" onclick="loadData()">🔄 刷新数据</button>
 </header>
 
-<div class="container">
+<!-- ========== Tab 栏 ========== -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('dashboard')">📊 仪表盘</button>
+  <button class="tab-btn" onclick="switchTab('watchboard')">📋 深度看板</button>
+</div>
 
-  <!-- 四游戏总览 -->
-  <div class="summary-grid" id="summaryGrid">
-    <div class="loading">加载中…</div>
-  </div>
-
-  <!-- 趋势图 + 风险分布 -->
-  <div class="charts-grid">
-    <div class="chart-box">
-      <h3>📈 舆情趋势（近12周）</h3>
-      <canvas id="trendChart"></canvas>
+<!-- ========== Tab1：仪表盘 ========== -->
+<div class="tab-content active" id="tab-dashboard">
+  <div class="container">
+    <div class="summary-grid" id="summaryGrid"><div class="loading">加载中…</div></div>
+    <div class="charts-grid">
+      <div class="chart-box"><h3>📈 舆情趋势（近12周）</h3><canvas id="trendChart"></canvas></div>
+      <div class="chart-box"><h3>⚠️ 风险类别分布</h3><canvas id="riskPie"></canvas></div>
     </div>
-    <div class="chart-box">
-      <h3>⚠️ 风险类别分布</h3>
-      <canvas id="riskPie"></canvas>
+    <div class="events-section">
+      <h3>📰 最新舆情事件（近30天）</h3>
+      <table><thead><tr><th>日期</th><th>游戏</th><th>事件标题</th><th>类别</th><th>严重程度</th><th>链接</th></tr></thead>
+        <tbody id="eventsBody"><tr><td colspan="6" class="loading">加载中…</td></tr></tbody>
+      </table>
+    </div>
+    <div class="compare-section">
+      <h3>📊 四游戏暑期数据对比</h3>
+      <canvas id="compareChart" style="max-height:320px"></canvas>
     </div>
   </div>
+</div>
 
-  <!-- 最新事件 -->
-  <div class="events-section">
-    <h3>📰 最新舆情事件（近30天）</h3>
-    <table>
-      <thead><tr><th>日期</th><th>游戏</th><th>事件标题</th><th>类别</th><th>严重程度</th><th>链接</th></tr></thead>
-      <tbody id="eventsBody"><tr><td colspan="6" class="loading">加载中…</td></tr></tbody>
-    </table>
+<!-- ========== Tab2：深度看板 ========== -->
+<div class="tab-content" id="tab-watchboard">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px">
+    <h2 class="sec">🚨 本期预警 <small>状态灯：红=预警 / 黄=关注 / 绿=平稳</small></h2>
+    <div class="alerts" id="wb-alerts"><div class="loading">加载中…</div></div>
+
+    <h2 class="sec">📅 暑期时间轴 <small>历史规律 vs 本期实际（5月中旬 → 9月初）</small></h2>
+    <div class="timeline"><div class="tl-row" id="wb-timeline"></div></div>
+
+    <h2 class="sec">🎮 四款游戏监测 <small>滚动展示当周数据 + 渠道/观点/案例</small></h2>
+    <div class="games-grid" id="wb-games"><div class="loading">加载中…</div></div>
+
+    <h2 class="sec">🔗 共性议题横向追踪 <small>跨产品高频议题</small></h2>
+    <div class="ctopics" id="wb-ctopics"><div class="loading">加载中…</div></div>
+
+    <div class="wb-footer" id="wb-footer"></div>
   </div>
-
-  <!-- 四游戏对比 -->
-  <div class="compare-section">
-    <h3>📊 四游戏暑期数据对比</h3>
-    <canvas id="compareChart" style="max-height:320px;"></canvas>
-  </div>
-
 </div>
 
 <script>
+// ========== 全局状态 ==========
+let D = null; // 合并后的数据
 let trendChart = null, riskPie = null, compareChart = null;
+const LV = {red:'red',yellow:'yellow',green:'green'};
+const LVTXT = {red:'预警',yellow:'关注',green:'平稳'};
+const esc = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 
-async function loadData() {
-  try {
-    const resp = await fetch('data.json?t=' + Date.now());
-    if (!resp.ok) throw new Error('数据加载失败');
-    const data = await resp.json();
-    render(data);
-    document.getElementById('lastUpdate').textContent = '最后更新：' + (data.lastUpdate || '—');
-  } catch (e) {
-    document.getElementById('summaryGrid').innerHTML =
-      '<div class="error">⚠️ 数据加载失败：' + e.message + '<br>请确保 data.json 已上传。</div>';
+// ========== Tab 切换 ==========
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ========== 加载数据 ==========
+async function loadAll(){
+  const paths = ['./data.json','./watchboard-data.json'];
+  let merged = { _sources:[] };
+  let ok = 0;
+  for(const p of paths){
+    try{
+      const r = await fetch(p+'?t='+Date.now());
+      if(r.ok){ const j = await r.json(); Object.assign(merged, j); merged._sources.push(p); ok++; }
+    }catch(e){}
   }
+  if(ok===0){
+    document.getElementById('summaryGrid').innerHTML = '<div class="err">⚠️ 无法加载 data.json 和 watchboard-data.json<br>请确保文件已上传到本目录</div>';
+    return;
+  }
+  D = merged;
+  renderDashboard();
+  renderWatchboard();
+  document.getElementById('lastUpdate').textContent = '最后更新：' + (D.lastUpdate||D.meta?.updateDate||'—');
 }
 
-function render(d) {
-  renderSummary(d);
-  renderTrend(d);
-  renderRiskPie(d);
-  renderEvents(d);
-  renderCompare(d);
+// ========== 仪表盘渲染 ==========
+function renderDashboard(){
+  if(!D) return;
+  renderSummary();
+  renderTrend();
+  renderRiskPie();
+  renderEvents();
+  renderCompare();
 }
 
-function renderSummary(d) {
+function renderSummary(){
   const grid = document.getElementById('summaryGrid');
-  const games = d.games || [];
-  grid.innerHTML = games.map(g => {
-    const riskClass = g.riskLevel === '高' ? 'risk-high' : g.riskLevel === '中' ? 'risk-medium' : 'risk-low';
-    const badgeClass = g.riskLevel === '高' ? 'high' : g.riskLevel === '中' ? 'medium' : 'low';
-    const trendIcon = g.trend === 'up' ? '↑' : g.trend === 'down' ? '↓' : '→';
-    const trendClass = g.trend === 'up' ? 'up' : g.trend === 'down' ? 'down' : 'flat';
-    return `<div class="game-card ${riskClass}">
-      <span class="risk-badge ${badgeClass}">风险：${g.riskLevel}</span>
-      <h2>${g.name}</h2>
-      <div class="kpi">${g.eventCount}</div>
+  const games = D.games || [];
+  if(games.length===0){ grid.innerHTML = '<div class="err">data.json 中 games 数组为空</div>'; return; }
+  grid.innerHTML = games.map(g=>{
+    const rc = g.riskLevel==='高'?'risk-high':g.riskLevel==='中'?'risk-medium':'risk-low';
+    const bc = g.riskLevel==='高'?'high':g.riskLevel==='中'?'medium':'low';
+    const ti = g.trend==='up'?'↑':g.trend==='down'?'↓':'→';
+    const tc = g.trend==='up'?'up':g.trend==='down'?'down':'flat';
+    return `<div class="game-card ${rc}">
+      <span class="risk-badge ${bc}">风险：${g.riskLevel||'—'}</span>
+      <h2>${esc(g.name||'')}</h2>
+      <div class="kpi">${g.eventCount||0}</div>
       <div class="kpi-label">暑期舆情事件数</div>
-      <div class="trend ${trendClass}">${trendIcon} ${g.trendDesc || ''}</div>
+      <div class="trend ${tc}">${ti} ${g.trendDesc||''}</div>
     </div>`;
   }).join('');
 }
 
-function renderTrend(d) {
+function renderTrend(){
   const ctx = document.getElementById('trendChart').getContext('2d');
-  const weeks = d.trendWeeks || [];
-  const datasets = (d.games || []).map((g, i) => ({
-    label: g.name,
+  const weeks = D.trendWeeks || [];
+  const datasets = (D.games||[]).map((g,i)=>({
+    label: g.name||'游戏'+(i+1),
     data: g.weeklyCounts || [],
     borderColor: ['#ef5350','#4fc3f7','#ff9800','#66bb6a'][i],
     backgroundColor: ['rgba(239,83,80,0.1)','rgba(79,195,247,0.1)','rgba(255,152,0,0.1)','rgba(102,187,106,0.1)'][i],
-    tension: 0.3, fill: false, pointRadius: 3,
+    tension:0.3, fill:false, pointRadius:3,
   }));
-  if (trendChart) trendChart.destroy();
-  trendChart = new Chart(ctx, {
-    type: 'line',
-    data: { labels: weeks, datasets },
-    options: {
-      responsive: true,
-      plugins: { legend: { position: 'top' } },
-      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-    }
+  if(trendChart) trendChart.destroy();
+  trendChart = new Chart(ctx,{
+    type:'line',
+    data:{labels:weeks,datasets},
+    options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}
   });
 }
 
-function renderRiskPie(d) {
+function renderRiskPie(){
   const ctx = document.getElementById('riskPie').getContext('2d');
-  const dist = d.riskDistribution || {};
-  if (riskPie) riskPie.destroy();
-  riskPie = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: Object.keys(dist),
-      datasets: [{ data: Object.values(dist),
-        backgroundColor: ['#ef5350','#4fc3f7','#ff9800','#66bb6a'],
-      }]
-    },
-    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  const dist = D.riskDistribution || {};
+  if(riskPie) riskPie.destroy();
+  riskPie = new Chart(ctx,{
+    type:'doughnut',
+    data:{labels:Object.keys(dist),datasets:[{data:Object.values(dist),backgroundColor:['#ef5350','#4fc3f7','#ff9800','#66bb6a']}]},
+    options:{responsive:true,plugins:{legend:{position:'bottom'}}}
   });
 }
 
-function renderEvents(d) {
+function renderEvents(){
   const tbody = document.getElementById('eventsBody');
-  const events = (d.recentEvents || []).slice(0, 30);
-  tbody.innerHTML = events.map(e => {
-    const tagClass = 'tag-' + (e.category === '政策' ? 'policy' : e.category === '行业' ? 'industry' : e.category === '风险' ? 'risk' : 'case');
-    const sevClass = 'severity-' + (e.severity === '高' ? 'high' : e.severity === '中' ? 'medium' : 'low');
-    const link = e.url ? `<a href="${e.url}" target="_blank" style="color:#4fc3f7;">查看</a>` : '—';
+  const events = (D.recentEvents||[]).slice(0,30);
+  if(events.length===0){ tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#90a4ae">暂无事件数据</td></tr>'; return; }
+  tbody.innerHTML = events.map(e=>{
+    const tc = 'tag-'+(e.category==='政策'?'policy':e.category==='行业'?'industry':e.category==='风险'?'risk':'case');
+    const sc = 'severity-'+(e.severity==='高'?'high':e.severity==='中'?'medium':'low');
+    const link = e.url?`<a href="${esc(e.url)}" target="_blank" style="color:#4fc3f7">查看</a>`:'—';
     return `<tr>
-      <td>${e.date || '—'}</td>
-      <td>${e.game || '—'}</td>
-      <td>${e.title || '—'}</td>
-      <td><span class="tag ${tagClass}">${e.category || '—'}</span></td>
-      <td class="${sevClass}">${e.severity || '—'}</td>
-      <td>${link}</td>
+      <td>${esc(e.date||'—')}</td><td>${esc(e.game||'—')}</td>
+      <td>${esc(e.title||'—')}</td>
+      <td><span class="tag ${tc}">${esc(e.category||'—')}</span></td>
+      <td class="${sc}">${esc(e.severity||'—')}</td><td>${link}</td>
     </tr>`;
   }).join('');
 }
 
-function renderCompare(d) {
+function renderCompare(){
   const ctx = document.getElementById('compareChart').getContext('2d');
-  const games = d.games || [];
-  if (compareChart) compareChart.destroy();
-  compareChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: games.map(g => g.name),
-      datasets: [
-        { label: '舆情事件数', data: games.map(g => g.eventCount || 0), backgroundColor: '#4fc3f7' },
-        { label: '高风险事件', data: games.map(g => g.highRiskCount || 0), backgroundColor: '#ef5350' },
+  const games = D.games||[];
+  if(compareChart) compareChart.destroy();
+  compareChart = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:games.map(g=>g.name||''),
+      datasets:[
+        {label:'舆情事件数',data:games.map(g=>g.eventCount||0),backgroundColor:'#4fc3f7'},
+        {label:'高风险事件',data:games.map(g=>g.highRiskCount||0),backgroundColor:'#ef5350'},
       ]
     },
-    options: {
-      responsive: true,
-      plugins: { legend: { position: 'top' } },
-      scales: { y: { beginAtZero: true } }
-    }
+    options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true}}}
   });
 }
 
-loadData();
-setInterval(loadData, 10 * 60 * 1000); // 每10分钟自动刷新
+// ========== 深度看板渲染 ==========
+function renderWatchboard(){
+  if(!D) return;
+  // meta header
+  const meta = D.meta || {};
+  // alerts
+  const aBox = document.getElementById('wb-alerts');
+  const alerts = D.alerts || [];
+  if(alerts.length>0){
+    aBox.innerHTML = alerts.map(a=>`
+      <div class="alert ${LV[a.level]||'green'}">
+        <div class="ahead"><span class="dot ${LV[a.level]||'green'}"></span>${esc(a.game||'')}
+          <span class="tag-msg ${LV[a.level]||'green'}" style="margin-left:auto">${LVTXT[a.level]||''}</span></div>
+        <div class="atext">${esc(a.text||'')}</div>
+      </div>`).join('');
+  } else aBox.innerHTML = '<div style="color:var(--sub);padding:12px">暂无预警数据</div>';
+
+  // timeline
+  const tBox = document.getElementById('wb-timeline');
+  const tl = D.timeline || [];
+  if(tl.length>0){
+    tBox.innerHTML = tl.map(t=>{
+      const isTodo = !t.actual || t.actual.startsWith('（待填') || t.actual.startsWith('(待填');
+      return `<div class="tl-node">
+        <div class="tl-date">${esc(t.date||'')}</div>
+        <div class="tl-name">${esc(t.node||'')}</div>
+        <div class="tl-h"><span class="tl-lbl">历史规律</span>${esc(t.history||'')}</div>
+        <div class="tl-a ${isTodo?'todo':''}"><span class="tl-lbl">本期实际</span>${esc(t.actual||'（待填）')}</div>
+      </div>`;
+    }).join('');
+  } else tBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无时间轴数据</div>';
+
+  // games
+  const gBox = document.getElementById('wb-games');
+  const games = D.games || [];
+  if(games.length>0){
+    gBox.innerHTML = games.map(g=>{
+      const last = (g.weekly||[])[(g.weekly||[]).length-1] || {};
+      const maxPct = Math.max(1,...(g.topics||[]).map(t=>t.pct||0));
+      const topics = (g.topics||[]).filter(t=>(t.pct||0)>0).map(t=>`
+        <div class="bar">
+          <span class="bl" title="${esc((t.cat||'')+'·'+(t.label||''))}">${esc(t.label||'')}</span>
+          <span class="bw"><span class="bf" style="width:${maxPct>0?Math.round((t.pct||0)/maxPct*100):0}%;background:${g.color||'#999'}"></span></span>
+          <span class="bv">${(t.pct||0)}%</span>
+        </div>`).join('');
+      const channels = (g.channels||[]).map(c=>`<span class="chip"><b>${esc(c.name||'')}</b> ${esc(c.note||'')}</span>`).join('');
+      const cases = (g.cases||[]).map(c=>`<div class="case"><b>${esc(c.date||'')}</b> ${esc(c.text||'')}</div>`).join('');
+      return `<div class="gcard">
+        <div class="ghead" style="background:${g.color||'#666'}">
+          <div><h3>${esc(g.name||'')}</h3><div class="pat">${esc(g.pattern||'')}</div></div>
+          <span class="gstat">● ${LVTXT[g.status]||''}</span>
+        </div>
+        <div class="gbody">
+          <div class="stats">
+            <div class="stat"><div class="n" style="color:${g.color||'#666'}">${esc(g.totalPosts||'-')}</div><div class="l">累计发帖量</div></div>
+            <div class="stat"><div class="n" style="color:${g.color||'#666'}">${esc(g.totalInteract||'-')}</div><div class="l">发帖+评论量</div></div>
+          </div>
+          <div class="blk"><div class="bt">📈 本周动态</div>
+            <div class="wk"><span class="tag-msg ${LV[last.status]||'green'}" style="flex:none">${LVTXT[last.status]||''}</span>
+            <span>${esc(last.week||'')}：声量${last.volume||'-'} / 发帖${last.posts||'-'}。${(last.highlight||'')}</span></div>
+          </div>
+          <div class="blk"><div class="bt">🗂 主要观点聚类（Top）</div>${topics}</div>
+          <div class="blk"><div class="bt">📡 渠道分布</div><div class="chips">${channels}</div></div>
+          <div class="blk"><div class="bt">⚠️ 典型案例</div>${cases}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } else gBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无游戏数据</div>';
+
+  // common topics
+  const cBox = document.getElementById('wb-ctopics');
+  const cts = D.commonTopics || [];
+  if(cts.length>0){
+    cBox.innerHTML = cts.map(c=>`
+      <div class="ct">
+        <h4>🔸 ${esc(c.topic||'')}</h4>
+        <p>${esc(c.desc||'')}</p>
+        <div class="gg">${(c.games||[]).map(g=>`<span>${esc(g)}</span>`).join('')}</div>
+      </div>`).join('');
+  } else cBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无共性议题数据</div>';
+
+  // footer
+  document.getElementById('wb-footer').innerHTML =
+    `本看板数据每周更新 · 数据来源：舆情监测系统导入 + Feedly MCP 监控<br>`+
+    `最后更新：${esc(D.meta?.updateDate||D.lastUpdate||'—')}`;
+}
+
+// ========== 启动 ==========
+loadAll();
+setInterval(loadAll, 10*60*1000);
 </script>
 </body>
 </html>
