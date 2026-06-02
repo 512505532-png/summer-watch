@@ -61,7 +61,7 @@ function buildMarkdown(data) {
 
   // 仪表盘链接
   md += `---\n`;
-  md += `🔗 [查看完整仪表盘](${process.env.DASHBOARD_URL || 'https://512505532-png.github.io/summer-watch/'} )\n`;
+  md += `🔗 [查看完整仪表盘](https://512505532-png.github.io/summer-watch/)\n`;
   md += `> 数据每周自动更新，点击链接查看实时趋势图 📈\n`;
 
   return md;
