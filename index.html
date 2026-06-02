@@ -205,25 +205,11 @@
     <h2 class="sec">📅 暑期时间轴 <small>历史规律 vs 本期实际（5月中旬 → 9月初）</small></h2>
     <div class="timeline"><div class="tl-row" id="wb-timeline"></div></div>
 
-    <!-- ⑤ 最新舆情事件表（来自仪表盘） -->
-    <div class="events-section">
-      <h3>📰 最新舆情事件（近30天）</h3>
-      <table><thead><tr><th>日期</th><th>游戏</th><th>事件标题</th><th>类别</th><th>严重程度</th><th>链接</th></tr></thead>
-        <tbody id="eventsBody"><tr><td colspan="6" class="loading">加载中…</td></tr></tbody>
-      </table>
-    </div>
-
-    <!-- ⑥ 四游戏对比图（来自仪表盘） -->
-    <div class="compare-section">
-      <h3>📊 四游戏暑期数据对比</h3>
-      <canvas id="compareChart" style="max-height:320px"></canvas>
-    </div>
-
-    <!-- ⑦ 四款游戏监测卡片 -->
+    <!-- ⑤ 四款游戏监测卡片 -->
     <h2 class="sec">🎮 四款游戏监测 <small>当周数据 + 渠道 / 观点 / 案例</small></h2>
     <div class="games-grid" id="wb-games"><div class="loading">加载中…</div></div>
 
-    <!-- ⑧ 共性议题 -->
+    <!-- ⑥ 共性议题 -->
     <h2 class="sec">🔗 共性议题横向追踪 <small>跨产品高频议题</small></h2>
     <div class="ctopics" id="wb-topics"><div class="loading">加载中…</div></div>
 
@@ -265,7 +251,7 @@
 let D = null;
 let rawDataText = '';
 let rawWbText = '';
-let trendChart = null, riskPie = null, compareChart = null;
+let trendChart = null, riskPie = null;
 const LV = {red:'red',yellow:'yellow',green:'green'};
 const LVTXT = {red:'预警',yellow:'关注',green:'平稳'};
 const esc = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
@@ -316,8 +302,6 @@ function renderBoard(){
   renderTrend();
   renderRiskPie();
   renderTimeline();
-  renderEvents();
-  renderCompare();
   renderGames();
   renderCommonTopics();
   renderFooter();
@@ -405,43 +389,7 @@ function renderTimeline(){
   } else tBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无时间轴数据</div>';
 }
 
-// ⑤ 事件表
-function renderEvents(){
-  const tbody = document.getElementById('eventsBody');
-  const events = (D.recentEvents||[]).slice(0,30);
-  if(events.length===0){ tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:#90a4ae">暂无事件数据</td></tr>'; return; }
-  tbody.innerHTML = events.map(e=>{
-    const tc = 'tag-'+(e.category==='政策'?'policy':e.category==='行业'?'industry':e.category==='风险'?'risk':'case');
-    const sc = 'severity-'+(e.severity==='高'?'high':e.severity==='中'?'medium':'low');
-    const link = e.url?`<a href="${esc(e.url)}" target="_blank" style="color:#4fc3f7">查看</a>`:'—';
-    return `<tr>
-      <td>${esc(e.date||'—')}</td><td>${esc(e.game||'—')}</td>
-      <td>${esc(e.title||'—')}</td>
-      <td><span class="tag ${tc}">${esc(e.category||'—')}</span></td>
-      <td class="${sc}">${esc(e.severity||'—')}</td><td>${link}</td>
-    </tr>`;
-  }).join('');
-}
-
-// ⑥ 对比图
-function renderCompare(){
-  const ctx = document.getElementById('compareChart').getContext('2d');
-  const games = D.games||[];
-  if(compareChart) compareChart.destroy();
-  compareChart = new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:games.map(g=>g.name||''),
-      datasets:[
-        {label:'舆情事件数',data:games.map(g=>g.eventCount||0),backgroundColor:'#4fc3f7'},
-        {label:'高风险事件',data:games.map(g=>g.highRiskCount||0),backgroundColor:'#ef5350'},
-      ]
-    },
-    options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true}}}
-  });
-}
-
-// ⑦ 游戏卡片
+// ⑤ 游戏卡片
 function renderGames(){
   const gBox = document.getElementById('wb-games');
   const games = D.games || [];
@@ -480,7 +428,7 @@ function renderGames(){
   } else gBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无游戏数据</div>';
 }
 
-// ⑧ 共性议题
+// ⑥ 共性议题
 function renderCommonTopics(){
   const cBox = document.getElementById('wb-topics');
   const cts = D.commonTopics || [];
