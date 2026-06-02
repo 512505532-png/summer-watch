@@ -94,5 +94,27 @@
       "severity": "高",
       "url": ""
     }
-  ]
+  ],
+  "reports": {
+    "daily": {
+      "baseUrl": "https://512505532-png.github.io/daily-report/reports",
+      "latestDate": "2026-06-02"
+    },
+    "weekly": {
+      "latest": {
+        "dateRange": "260525-260601",
+        "title": "未保行业及监管动态周报",
+        "url": "https://artidrop.ai/a/PkI1TSg5E4",
+        "summary": "【监管·高】网信办发布《人工智能应用伦理安全指引1.0》——AI伦理安全领域首个国家级标准文件"
+      },
+      "history": [
+        {
+          "dateRange": "260525-260601",
+          "title": "未保行业及监管动态周报",
+          "url": "https://artidrop.ai/a/PkI1TSg5E4",
+          "summary": "【监管·高】网信办发布《人工智能应用伦理安全指引1.0》"
+        }
+      ]
+    }
+  }
 }

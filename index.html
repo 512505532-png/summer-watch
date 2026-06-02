@@ -181,6 +181,7 @@
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('board',this)">📊 综合看板</button>
   <button class="tab-btn" onclick="switchTab('rawdata',this)">🗂️ 原始数据</button>
+  <button class="tab-btn" onclick="switchTab('reports',this)">📰 日报/周报</button>
 </div>
 
 <!-- ===== Tab1：综合看板（仪表盘 + 深度看板 合并）===== -->
@@ -246,6 +247,14 @@
   </div>
 </div>
 
+<!-- ===== Tab3：日报/周报 ===== -->
+<div class="tab-content" id="tab-reports">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px">
+    <h2 class="sec">📰 日报 / 周报 <small>未成年人保护动态报告</small></h2>
+    <div id="reports-container"><div class="loading">加载中…</div></div>
+  </div>
+</div>
+
 <script>
 // ===== 全局状态 =====
 let D = null;
@@ -264,6 +273,7 @@ function switchTab(name, btn){
   else document.querySelector(`.tab-btn[onclick*="${name}"]`).classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
   if(name==='rawdata') renderRawData();
+  if(name==='reports') renderReports();
 }
 
 // ===== 加载数据 =====
@@ -290,6 +300,7 @@ async function loadAll(){
   }
   D = merged;
   renderBoard();
+  renderReports();
   document.getElementById('lastUpdate').textContent = '最后更新：' + (D.lastUpdate||D.meta?.updateDate||'—');
   if(document.getElementById('tab-rawdata').classList.contains('active')) renderRawData();
 }
@@ -305,6 +316,85 @@ function renderBoard(){
   renderGames();
   renderCommonTopics();
   renderFooter();
+}
+
+// ===== 日报/周报渲染 =====
+function renderReports(){
+  if(!D || !D.reports){
+    document.getElementById('reports-container').innerHTML = '<div class="loading">暂无报告配置，请在 data.json 中配置 reports 字段</div>';
+    return;
+  }
+  const r = D.reports;
+  let html = '';
+
+  // 日报区域
+  const daily = r.daily || {};
+  const baseUrl = daily.baseUrl || 'https://512505532-png.github.io/daily-report/reports';
+  const latestDate = daily.latestDate || new Date().toISOString().slice(0,10);
+  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px">`;
+  // 最新日报卡片
+  html += `<div style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);border-radius:12px;padding:24px;color:#fff;position:relative;overflow:hidden">
+    <div style="font-size:12px;opacity:.6;margin-bottom:6px">📊 今日日报</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:8px">未成年人保护 · 每日动态</div>
+    <div style="font-size:13px;opacity:.7;margin-bottom:16px">${latestDate} 更新</div>
+    <a href="${baseUrl}/${latestDate}.html" target="_blank" style="display:inline-block;background:#4fc3f7;color:#1a1a2e;padding:8px 18px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">查看日报 →</a>
+  </div>`;
+  // 最新周报卡片
+  const weekly = r.weekly || {};
+  const latestWeekly = weekly.latest || {};
+  if(latestWeekly.url){
+    html += `<div style="background:linear-gradient(135deg,#1a5c8a 0%,#2d9bf0 100%);border-radius:12px;padding:24px;color:#fff;position:relative;overflow:hidden">
+      <div style="font-size:12px;opacity:.6;margin-bottom:6px">📋 本周周报</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.3">${esc(latestWeekly.title||'未保行业周报')}</div>
+      <div style="font-size:12px;opacity:.7;margin-bottom:12px">${esc(latestWeekly.dateRange||'')} · ${esc(latestWeekly.summary||'').slice(0,60)}${(latestWeekly.summary||'').length>60?'...':''}</div>
+      <a href="${latestWeekly.url}" target="_blank" style="display:inline-block;background:#fff;color:#1a5c8a;padding:8px 18px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600">查看周报 →</a>
+    </div>`;
+  }else{
+    html += `<div style="background:#f7f9fb;border-radius:12px;padding:24px;border:2px dashed #ddd">
+      <div style="font-size:13px;color:#999;text-align:center">📋 暂无本周周报配置<br>请在 data.json → reports.weekly 中配置</div>
+    </div>`;
+  }
+  html += `</div>`;
+
+  // 日报历史列表（自动生成最近7天）
+  html += `<h3 style="font-size:15px;font-weight:700;margin:20px 0 12px;padding-left:10px;border-left:4px solid #4fc3f7">📅 日报历史（最近7天）</h3>`;
+  html += `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px">`;
+  const today = new Date();
+  for(let i=0;i<7;i++){
+    const d = new Date(today);
+    d.setDate(d.getDate()-i);
+    const ds = d.toISOString().slice(0,10);
+    const isLatest = ds===latestDate;
+    html += `<a href="${baseUrl}/${ds}.html" target="_blank" style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:12px 16px;text-decoration:none;color:#1a1a2e;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid ${isLatest?'#4fc3f7':'#e0e0e0'};transition:all .15s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:13px;font-weight:600">${ds}</span>
+        ${isLatest?'<span style="background:#e6f7ff;color:#0078d4;font-size:11px;padding:2px 8px;border-radius:4px">最新</span>':''}
+        <span style="font-size:12px;color:#666">未成年人保护 · 每日动态日报</span>
+      </div>
+      <span style="font-size:12px;color:#999">查看 →</span>
+    </a>`;
+  }
+  html += `</div>`;
+
+  // 周报历史列表
+  const weeklyHistory = weekly.history || [];
+  if(weeklyHistory.length>0){
+    html += `<h3 style="font-size:15px;font-weight:700;margin:20px 0 12px;padding-left:10px;border-left:4px solid #2d9bf0">📑 周报历史</h3>`;
+    html += `<div style="display:flex;flex-direction:column;gap:8px">`;
+    for(const w of weeklyHistory){
+      html += `<a href="${w.url}" target="_blank" style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:8px;padding:12px 16px;text-decoration:none;color:#1a1a2e;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid #2d9bf0;transition:all .15s" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+        <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+          <span style="font-size:12px;font-weight:600;white-space:nowrap">${esc(w.dateRange||'')}</span>
+          <span style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(w.title||'未保行业周报')}</span>
+          <span style="font-size:11px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">${esc(w.summary||'').slice(0,80)}${(w.summary||'').length>80?'...':''}</span>
+        </div>
+        <span style="font-size:12px;color:#999;flex-shrink:0;margin-left:8px">查看 →</span>
+      </a>`;
+    }
+    html += `</div>`;
+  }
+
+  document.getElementById('reports-container').innerHTML = html;
 }
 
 // ① 预警
