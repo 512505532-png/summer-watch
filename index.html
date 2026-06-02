@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>暑期未成年人保护观察仪表盘 · 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f0f4f8; color: #1a1a2e; }
+  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header h1 span { color: #4fc3f7; }
+  .meta { font-size: 13px; color: #90a4ae; }
+  .refresh-btn { background: #4fc3f7; color: #1a1a2e; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .refresh-btn:hover { background: #29b6f6; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+  /* 总览卡片 */
+  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .game-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 4px solid #4fc3f7; position: relative; }
+  .game-card.risk-high   { border-top-color: #ef5350; }
+  .game-card.risk-medium { border-top-color: #ff9800; }
+  .game-card.risk-low    { border-top-color: #66bb6a; }
+  .game-card h2 { font-size: 15px; color: #546e7a; margin-bottom: 8px; }
+  .game-card .kpi { font-size: 32px; font-weight: 700; color: #1a1a2e; }
+  .game-card .kpi-label { font-size: 12px; color: #90a4ae; margin-top: 2px; }
+  .game-card .trend { font-size: 13px; margin-top: 8px; }
+  .trend.up   { color: #ef5350; }
+  .trend.down { color: #66bb6a; }
+  .trend.flat { color: #90a4ae; }
+  .risk-badge { position: absolute; top: 16px; right: 16px; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .risk-badge.high   { background: #ffebee; color: #c62828; }
+  .risk-badge.medium { background: #fff8e1; color: #e65100; }
+  .risk-badge.low    { background: #e8f5e9; color: #2e7d32; }
+
+  /* 图表区 */
+  .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .chart-box { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .chart-box h3 { font-size: 14px; color: #546e7a; margin-bottom: 12px; }
+
+  /* 事件表格 */
+  .events-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 24px; }
+  .events-section h3 { font-size: 14px; color: #546e7a; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f0f4f8; color: #546e7a; font-weight: 600; padding: 10px 12px; text-align: left; border-bottom: 2px solid #e0e0e0; }
+  td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tr:hover { background: #f8fafc; }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 4px; margin-right: 4px; }
+  .tag-policy   { background: #e3f2fd; color: #1565c0; }
+  .tag-industry { background: #f3e5f5; color: #6a1b9a; }
+  .tag-risk     { background: #fce4ec; color: #b71c1c; }
+  .tag-case     { background: #fff8e1; color: #e65100; }
+  .severity-high   { color: #c62828; font-weight: 700; }
+  .severity-medium { color: #e65100; font-weight: 600; }
+  .severity-low    { color: #2e7d32; }
+
+  /* 四游戏对比 */
+  .compare-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .compare-section h3 { font-size: 14px; color: #546e7a; margin-bottom: 12px; }
+
+  .loading { text-align: center; padding: 60px; color: #90a4ae; }
+  .error  { background: #ffebee; color: #c62828; padding: 16px; border-radius: 8px; margin: 16px 0; }
+
+  @media (max-width: 900px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .charts-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🛡️ 暑期未成年人保护观察仪表盘 · <span>2026</span></h1>
+    <div class="meta" id="lastUpdate">数据加载中…</div>
+  </div>
+  <button class="refresh-btn" onclick="loadData()">🔄 刷新数据</button>
+</header>
+
+<div class="container">
+
+  <!-- 四游戏总览 -->
+  <div class="summary-grid" id="summaryGrid">
+    <div class="loading">加载中…</div>
+  </div>
+
+  <!-- 趋势图 + 风险分布 -->
+  <div class="charts-grid">
+    <div class="chart-box">
+      <h3>📈 舆情趋势（近12周）</h3>
+      <canvas id="trendChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>⚠️ 风险类别分布</h3>
+      <canvas id="riskPie"></canvas>
+    </div>
+  </div>
+
+  <!-- 最新事件 -->
+  <div class="events-section">
+    <h3>📰 最新舆情事件（近30天）</h3>
+    <table>
+      <thead><tr><th>日期</th><th>游戏</th><th>事件标题</th><th>类别</th><th>严重程度</th><th>链接</th></tr></thead>
+      <tbody id="eventsBody"><tr><td colspan="6" class="loading">加载中…</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- 四游戏对比 -->
+  <div class="compare-section">
+    <h3>📊 四游戏暑期数据对比</h3>
+    <canvas id="compareChart" style="max-height:320px;"></canvas>
+  </div>
+
+</div>
+
+<script>
+let trendChart = null, riskPie = null, compareChart = null;
+
+async function loadData() {
+  try {
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (!resp.ok) throw new Error('数据加载失败');
+    const data = await resp.json();
+    render(data);
+    document.getElementById('lastUpdate').textContent = '最后更新：' + (data.lastUpdate || '—');
+  } catch (e) {
+    document.getElementById('summaryGrid').innerHTML =
+      '<div class="error">⚠️ 数据加载失败：' + e.message + '<br>请确保 data.json 已上传。</div>';
+  }
+}
+
+function render(d) {
+  renderSummary(d);
+  renderTrend(d);
+  renderRiskPie(d);
+  renderEvents(d);
+  renderCompare(d);
+}
+
+function renderSummary(d) {
+  const grid = document.getElementById('summaryGrid');
+  const games = d.games || [];
+  grid.innerHTML = games.map(g => {
+    const riskClass = g.riskLevel === '高' ? 'risk-high' : g.riskLevel === '中' ? 'risk-medium' : 'risk-low';
+    const badgeClass = g.riskLevel === '高' ? 'high' : g.riskLevel === '中' ? 'medium' : 'low';
+    const trendIcon = g.trend === 'up' ? '↑' : g.trend === 'down' ? '↓' : '→';
+    const trendClass = g.trend === 'up' ? 'up' : g.trend === 'down' ? 'down' : 'flat';
+    return `<div class="game-card ${riskClass}">
+      <span class="risk-badge ${badgeClass}">风险：${g.riskLevel}</span>
+      <h2>${g.name}</h2>
+      <div class="kpi">${g.eventCount}</div>
+      <div class="kpi-label">暑期舆情事件数</div>
+      <div class="trend ${trendClass}">${trendIcon} ${g.trendDesc || ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTrend(d) {
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  const weeks = d.trendWeeks || [];
+  const datasets = (d.games || []).map((g, i) => ({
+    label: g.name,
+    data: g.weeklyCounts || [],
+    borderColor: ['#ef5350','#4fc3f7','#ff9800','#66bb6a'][i],
+    backgroundColor: ['rgba(239,83,80,0.1)','rgba(79,195,247,0.1)','rgba(255,152,0,0.1)','rgba(102,187,106,0.1)'][i],
+    tension: 0.3, fill: false, pointRadius: 3,
+  }));
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: weeks, datasets },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+  });
+}
+
+function renderRiskPie(d) {
+  const ctx = document.getElementById('riskPie').getContext('2d');
+  const dist = d.riskDistribution || {};
+  if (riskPie) riskPie.destroy();
+  riskPie = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(dist),
+      datasets: [{ data: Object.values(dist),
+        backgroundColor: ['#ef5350','#4fc3f7','#ff9800','#66bb6a'],
+      }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  });
+}
+
+function renderEvents(d) {
+  const tbody = document.getElementById('eventsBody');
+  const events = (d.recentEvents || []).slice(0, 30);
+  tbody.innerHTML = events.map(e => {
+    const tagClass = 'tag-' + (e.category === '政策' ? 'policy' : e.category === '行业' ? 'industry' : e.category === '风险' ? 'risk' : 'case');
+    const sevClass = 'severity-' + (e.severity === '高' ? 'high' : e.severity === '中' ? 'medium' : 'low');
+    const link = e.url ? `<a href="${e.url}" target="_blank" style="color:#4fc3f7;">查看</a>` : '—';
+    return `<tr>
+      <td>${e.date || '—'}</td>
+      <td>${e.game || '—'}</td>
+      <td>${e.title || '—'}</td>
+      <td><span class="tag ${tagClass}">${e.category || '—'}</span></td>
+      <td class="${sevClass}">${e.severity || '—'}</td>
+      <td>${link}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderCompare(d) {
+  const ctx = document.getElementById('compareChart').getContext('2d');
+  const games = d.games || [];
+  if (compareChart) compareChart.destroy();
+  compareChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: games.map(g => g.name),
+      datasets: [
+        { label: '舆情事件数', data: games.map(g => g.eventCount || 0), backgroundColor: '#4fc3f7' },
+        { label: '高风险事件', data: games.map(g => g.highRiskCount || 0), backgroundColor: '#ef5350' },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+}
+
+loadData();
+setInterval(loadData, 10 * 60 * 1000); // 每10分钟自动刷新
+</script>
+</body>
+</html>

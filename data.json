@@ -1,0 +1,49 @@
+{
+  "lastUpdate": "2026-06-02",
+  "games": [
+    {
+      "name": "暗区突围",
+      "riskLevel": "中",
+      "eventCount": 0,
+      "highRiskCount": 0,
+      "trend": "flat",
+      "trendDesc": "暑期观察启动，待数据累积",
+      "weeklyCounts": []
+    },
+    {
+      "name": "火影忍者手游",
+      "riskLevel": "低",
+      "eventCount": 0,
+      "highRiskCount": 0,
+      "trend": "flat",
+      "trendDesc": "暑期观察启动，待数据累积",
+      "weeklyCounts": []
+    },
+    {
+      "name": "元梦之星",
+      "riskLevel": "低",
+      "eventCount": 0,
+      "highRiskCount": 0,
+      "trend": "flat",
+      "trendDesc": "暑期观察启动，待数据累积",
+      "weeklyCounts": []
+    },
+    {
+      "name": "三角洲行动",
+      "riskLevel": "中",
+      "eventCount": 0,
+      "highRiskCount": 0,
+      "trend": "flat",
+      "trendDesc": "暑期观察启动，待数据累积",
+      "weeklyCounts": []
+    }
+  ],
+  "trendWeeks": [],
+  "riskDistribution": {
+    "政策": 0,
+    "行业": 0,
+    "风险": 0,
+    "案例": 0
+  },
+  "recentEvents": []
+}
