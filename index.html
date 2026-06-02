@@ -18,7 +18,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink)}
 
-  /* ========= 顶部导航 ========= */
+  /* 顶部导航 */
   header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);color:#fff;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
   header h1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
   header h1 span{color:var(--brand)}
@@ -27,18 +27,33 @@
   .refresh-btn{background:var(--brand);color:var(--brand-dark);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12.5px;font-weight:600}
   .refresh-btn:hover{background:#29b6f6}
 
-  /* ========= Tab 栏 ========= */
+  /* Tab 栏 */
   .tab-bar{background:#fff;padding:0 32px;border-bottom:1px solid var(--line);position:sticky;top:56px;z-index:99;display:flex;gap:0}
   .tab-btn{padding:12px 20px;font-size:14px;font-weight:600;color:var(--sub);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none}
   .tab-btn:hover{color:var(--ink)}
   .tab-btn.active{color:var(--brand);border-bottom-color:var(--brand)}
 
-  /* ========= 内容区 ========= */
+  /* 内容区 */
   .tab-content{display:none;padding:24px;max-width:1280px;margin:0 auto}
   .tab-content.active{display:block}
 
-  /* ========= 仪表盘视图 ========= */
-  .container{max-width:1280px;margin:0 auto;padding:24px}
+  /* ===== 通用 section 标题 ===== */
+  .sec{font-size:16px;font-weight:700;margin:34px 0 14px;padding-left:11px;border-left:4px solid var(--brand);display:flex;align-items:center;gap:8px}
+  .sec:first-child{margin-top:0}
+  .sec small{font-weight:400;color:var(--sub);font-size:12px}
+
+  /* ===== 预警条 ===== */
+  .alerts{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin-bottom:8px}
+  .alert{background:var(--card);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow);border-left:5px solid var(--line);display:flex;flex-direction:column;gap:6px}
+  .alert.red{border-left-color:var(--red)}.alert.yellow{border-left-color:var(--yellow)}.alert.green{border-left-color:var(--green)}
+  .ahead{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+  .dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .dot.red{background:var(--red)}.dot.yellow{background:var(--yellow)}.dot.green{background:var(--green)}
+  .atext{font-size:12.5px;color:var(--sub)}
+  .tag-msg{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
+  .tag-msg.red{background:var(--redbg);color:var(--red)}.tag-msg.yellow{background:var(--yellowbg);color:var(--yellow)}.tag-msg.green{background:var(--greenbg);color:var(--green)}
+
+  /* ===== KPI 卡片 ===== */
   .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
   .game-card{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);border-top:4px solid var(--brand);position:relative}
   .game-card.risk-high{border-top-color:var(--red)}
@@ -54,10 +69,24 @@
   .risk-badge.medium{background:var(--yellowbg);color:#e65100}
   .risk-badge.low{background:var(--greenbg);color:#2e7d32}
 
+  /* ===== 图表区 ===== */
   .charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px}
   .chart-box{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow)}
   .chart-box h3{font-size:14px;color:#546e7a;margin-bottom:12px}
 
+  /* ===== 时间轴 ===== */
+  .timeline{background:var(--card);border-radius:14px;padding:8px 4px;box-shadow:var(--shadow);overflow-x:auto;margin-bottom:8px}
+  .tl-row{display:flex;min-width:820px;align-items:stretch}
+  .tl-node{flex:1;padding:16px 14px;border-right:1px dashed var(--line);display:flex;flex-direction:column}
+  .tl-node:last-child{border-right:none}
+  .tl-date{font-weight:700;color:var(--brand);font-size:13px}
+  .tl-name{font-size:12.5px;font-weight:600;margin:3px 0 8px}
+  .tl-h{font-size:11.5px;color:var(--sub);background:var(--bg);padding:7px 9px;border-radius:7px;margin-bottom:6px;flex:1 1 auto}
+  .tl-a{font-size:11.5px;color:#2e7d32;background:var(--greenbg);padding:7px 9px;border-radius:7px;margin-top:auto}
+  .tl-a.todo{color:var(--sub);background:var(--bg)}
+  .tl-lbl{font-size:10px;color:#9aa3b8;display:block;margin-bottom:2px;font-weight:600}
+
+  /* ===== 事件表 ===== */
   .events-section{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);margin-bottom:24px}
   .events-section h3{font-size:14px;color:#546e7a;margin-bottom:12px}
   table{width:100%;border-collapse:collapse;font-size:13px}
@@ -73,35 +102,8 @@
   .severity-medium{color:#e65100;font-weight:600}
   .severity-low{color:#2e7d32}
 
-  .compare-section{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow)}
-
-  /* ========= 深度看板视图 ========= */
-  .sec{font-size:16px;font-weight:700;margin:34px 0 14px;padding-left:11px;border-left:4px solid var(--brand);display:flex;align-items:center;gap:8px}
-  .sec:first-child{margin-top:0}
-  .sec small{font-weight:400;color:var(--sub);font-size:12px}
-
-  .alerts{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
-  .alert{background:var(--card);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow);border-left:5px solid var(--line);display:flex;flex-direction:column;gap:6px}
-  .alert.red{border-left-color:var(--red)}.alert.yellow{border-left-color:var(--yellow)}.alert.green{border-left-color:var(--green)}
-  .ahead{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
-  .dot{width:10px;height:10px;border-radius:50%;flex:none}
-  .dot.red{background:var(--red)}.dot.yellow{background:var(--yellow)}.dot.green{background:var(--green)}
-  .atext{font-size:12.5px;color:var(--sub)}
-  .tag-msg{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
-  .tag-msg.red{background:var(--redbg);color:var(--red)}.tag-msg.yellow{background:var(--yellowbg);color:var(--yellow)}.tag-msg.green{background:var(--greenbg);color:var(--green)}
-
-  .timeline{background:var(--card);border-radius:14px;padding:8px 4px;box-shadow:var(--shadow);overflow-x:auto}
-  .tl-row{display:flex;min-width:820px;align-items:stretch}
-  .tl-node{flex:1;padding:16px 14px;border-right:1px dashed var(--line);display:flex;flex-direction:column}
-  .tl-node:last-child{border-right:none}
-  .tl-date{font-weight:700;color:var(--brand);font-size:13px}
-  .tl-name{font-size:12.5px;font-weight:600;margin:3px 0 8px}
-  .tl-h{font-size:11.5px;color:var(--sub);background:var(--bg);padding:7px 9px;border-radius:7px;margin-bottom:6px;flex:1 1 auto}
-  .tl-a{font-size:11.5px;color:#2e7d32;background:var(--greenbg);padding:7px 9px;border-radius:7px;margin-top:auto}
-  .tl-a.todo{color:var(--sub);background:var(--bg)}
-  .tl-lbl{font-size:10px;color:#9aa3b8;display:block;margin-bottom:2px;font-weight:600}
-
-  .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(540px,1fr));gap:16px;align-items:start}
+  /* ===== 游戏卡片 ===== */
+  .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(540px,1fr));gap:16px;align-items:start;margin-bottom:8px}
   .gcard{background:var(--card);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
   .ghead{padding:16px 18px;color:#fff;display:flex;justify-content:space-between;align-items:flex-start;min-height:72px}
   .ghead h3{font-size:17px;font-weight:700}
@@ -124,14 +126,18 @@
   .case:last-child{border:none}.case b{color:var(--red);font-weight:600}
   .wk{font-size:11.5px;background:var(--bg);padding:8px 10px;border-radius:8px;margin-top:4px;display:flex;gap:8px;align-items:flex-start;min-height:54px}
 
-  .ctopics{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;align-items:stretch}
+  /* ===== 对比图 ===== */
+  .compare-section{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);margin-bottom:24px}
+
+  /* ===== 共性议题 ===== */
+  .ctopics{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;align-items:stretch;margin-bottom:8px}
   .ct{background:var(--card);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column}
   .ct h4{font-size:13.5px;font-weight:700;margin-bottom:6px}
   .ct p{font-size:12px;color:var(--sub);margin-bottom:9px;flex:1 1 auto}
   .ct .gg{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto}
   .ct .gg span{font-size:10.5px;background:#eef2fd;color:var(--brand);padding:2px 8px;border-radius:6px;font-weight:600}
 
-  /* ========= 原始数据视图 ========= */
+  /* ===== 原始数据 Tab ===== */
   .raw-section{margin-bottom:32px}
   .raw-section h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
   .raw-actions{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
@@ -142,7 +148,6 @@
   .json-viewer{background:#1e1e2e;color:#cdd6f4;border-radius:12px;padding:20px;font-size:13px;line-height:1.7;overflow-x:auto;font-family:'Cascadia Code','Fira Code','Consolas',monospace;max-height:600px;overflow-y:auto}
   .json-viewer .jk{color:#89b4fa}.json-viewer .js{color:#f9e2af}.json-viewer .jstr{color:#a6e3a1}.json-viewer .jnum{color:#fab387}.json-viewer .jbool{color:#cba6f7}.json-viewer .jnull{color:#f38ba8}.json-viewer .jarr{color:#94e2d5}
   .json-error{background:#fff0f0;color:#c62828;padding:16px;border-radius:12px;font-size:13px}
-
   .raw-meta{display:flex;gap:24px;margin-bottom:16px;flex-wrap:wrap}
   .raw-meta .rm{font-size:12.5px;color:var(--sub)}
   .raw-meta .rm b{color:var(--ink)}
@@ -163,7 +168,7 @@
 </head>
 <body>
 
-<!-- ========= 顶部 ========= -->
+<!-- ===== 顶部 ===== -->
 <header>
   <h1>🛡️ 暑期未成年人保护观察 · <span>2026</span></h1>
   <div class="header-right">
@@ -172,54 +177,61 @@
   </div>
 </header>
 
-<!-- ========= Tab 栏 ========= -->
+<!-- ===== Tab 栏 ===== -->
 <div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 仪表盘</button>
-  <button class="tab-btn" onclick="switchTab('watchboard',this)">📋 深度看板</button>
+  <button class="tab-btn active" onclick="switchTab('board',this)">📊 综合看板</button>
   <button class="tab-btn" onclick="switchTab('rawdata',this)">🗂️ 原始数据</button>
 </div>
 
-<!-- ========= Tab1：仪表盘 ========= -->
-<div class="tab-content active" id="tab-dashboard">
-  <div class="container">
+<!-- ===== Tab1：综合看板（仪表盘 + 深度看板 合并）===== -->
+<div class="tab-content active" id="tab-board">
+  <div style="max-width:1280px;margin:0 auto;padding:0 24px">
+
+    <!-- ① 本期预警 -->
+    <h2 class="sec">🚨 本期预警 <small>状态灯：红=预警 / 黄=关注 / 绿=平稳</small></h2>
+    <div class="alerts" id="wb-alerts"><div class="loading">加载中…</div></div>
+
+    <!-- ② KPI 卡片（来自仪表盘） -->
+    <h2 class="sec">📊 游戏舆情总览</h2>
     <div class="summary-grid" id="summaryGrid"><div class="loading">加载中…</div></div>
+
+    <!-- ③ 趋势图 + 风险饼图（来自仪表盘） -->
     <div class="charts-grid">
       <div class="chart-box"><h3>📈 舆情趋势（近12周）</h3><canvas id="trendChart"></canvas></div>
       <div class="chart-box"><h3>⚠️ 风险类别分布</h3><canvas id="riskPie"></canvas></div>
     </div>
+
+    <!-- ④ 暑期时间轴 -->
+    <h2 class="sec">📅 暑期时间轴 <small>历史规律 vs 本期实际（5月中旬 → 9月初）</small></h2>
+    <div class="timeline"><div class="tl-row" id="wb-timeline"></div></div>
+
+    <!-- ⑤ 最新舆情事件表（来自仪表盘） -->
     <div class="events-section">
       <h3>📰 最新舆情事件（近30天）</h3>
       <table><thead><tr><th>日期</th><th>游戏</th><th>事件标题</th><th>类别</th><th>严重程度</th><th>链接</th></tr></thead>
         <tbody id="eventsBody"><tr><td colspan="6" class="loading">加载中…</td></tr></tbody>
       </table>
     </div>
+
+    <!-- ⑥ 四游戏对比图（来自仪表盘） -->
     <div class="compare-section">
       <h3>📊 四游戏暑期数据对比</h3>
       <canvas id="compareChart" style="max-height:320px"></canvas>
     </div>
-  </div>
-</div>
 
-<!-- ========= Tab2：深度看板 ========= -->
-<div class="tab-content" id="tab-watchboard">
-  <div style="max-width:1280px;margin:0 auto;padding:0 24px">
-    <h2 class="sec">🚨 本期预警 <small>状态灯：红=预警 / 黄=关注 / 绿=平稳</small></h2>
-    <div class="alerts" id="wb-alerts"><div class="loading">加载中…</div></div>
-
-    <h2 class="sec">📅 暑期时间轴 <small>历史规律 vs 本期实际（5月中旬 → 9月初）</small></h2>
-    <div class="timeline"><div class="tl-row" id="wb-timeline"></div></div>
-
-    <h2 class="sec">🎮 四款游戏监测 <small>滚动展示当周数据 + 渠道/观点/案例</small></h2>
+    <!-- ⑦ 四款游戏监测卡片 -->
+    <h2 class="sec">🎮 四款游戏监测 <small>当周数据 + 渠道 / 观点 / 案例</small></h2>
     <div class="games-grid" id="wb-games"><div class="loading">加载中…</div></div>
 
+    <!-- ⑧ 共性议题 -->
     <h2 class="sec">🔗 共性议题横向追踪 <small>跨产品高频议题</small></h2>
-    <div class="ctopics" id="wb-ctopics"><div class="loading">加载中…</div></div>
+    <div class="ctopics" id="wb-topics"><div class="loading">加载中…</div></div>
 
     <div class="wb-footer" id="wb-footer"></div>
   </div>
 </div>
 
-<!-- ========= Tab3：原始数据 ========= -->
+<!-- ===== Tab2：原始数据 ===== -->
 <div class="tab-content" id="tab-rawdata">
   <div style="max-width:1280px;margin:0 auto;padding:0 24px">
     <div class="raw-meta" id="rawMeta"></div>
@@ -242,34 +254,33 @@
       <pre class="json-viewer" id="rawWbOut" style="white-space:pre">加载中…</pre>
     </div>
     <div class="raw-section">
-      <h3>📊 数据校验</h3>
+      <h3>✅ 数据校验</h3>
       <div id="rawValidate" class="loading">加载中…</div>
     </div>
   </div>
 </div>
 
 <script>
-// ========= 全局状态 ==========
-let D = null;           // 合并后的数据
-let rawDataText = '';   // data.json 原始文本
-let rawWbText = '';     // watchboard-data.json 原始文本
+// ===== 全局状态 =====
+let D = null;
+let rawDataText = '';
+let rawWbText = '';
 let trendChart = null, riskPie = null, compareChart = null;
 const LV = {red:'red',yellow:'yellow',green:'green'};
 const LVTXT = {red:'预警',yellow:'关注',green:'平稳'};
 const esc = s => String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 
-// ========= Tab 切换 ==========
+// ===== Tab 切换 =====
 function switchTab(name, btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   if(btn) btn.classList.add('active');
   else document.querySelector(`.tab-btn[onclick*="${name}"]`).classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
-  // 切换到原始数据 Tab 时渲染
   if(name==='rawdata') renderRawData();
 }
 
-// ========= 加载数据 ==========
+// ===== 加载数据 =====
 async function loadAll(){
   const paths = ['./data.json','./watchboard-data.json'];
   let merged = { _sources:[] };
@@ -281,12 +292,8 @@ async function loadAll(){
         const j = await r.json();
         Object.assign(merged, j);
         merged._sources.push(p);
-        // 保存原始文本
-        if(p.includes('watchboard')){
-          rawWbText = JSON.stringify(j, null, 2);
-        } else {
-          rawDataText = JSON.stringify(j, null, 2);
-        }
+        if(p.includes('watchboard')) rawWbText = JSON.stringify(j,null,2);
+        else rawDataText = JSON.stringify(j,null,2);
         ok++;
       }
     }catch(e){}
@@ -296,27 +303,45 @@ async function loadAll(){
     return;
   }
   D = merged;
-  renderDashboard();
-  renderWatchboard();
+  renderBoard();
   document.getElementById('lastUpdate').textContent = '最后更新：' + (D.lastUpdate||D.meta?.updateDate||'—');
-  // 如果当前在原始数据 Tab，也刷新
   if(document.getElementById('tab-rawdata').classList.contains('active')) renderRawData();
 }
 
-// ========= 仪表盘渲染 ==========
-function renderDashboard(){
+// ===== 综合看板渲染 =====
+function renderBoard(){
   if(!D) return;
+  renderAlerts();
   renderSummary();
   renderTrend();
   renderRiskPie();
+  renderTimeline();
   renderEvents();
   renderCompare();
+  renderGames();
+  renderCommonTopics();
+  renderFooter();
 }
 
+// ① 预警
+function renderAlerts(){
+  const aBox = document.getElementById('wb-alerts');
+  const alerts = D.alerts || [];
+  if(alerts.length>0){
+    aBox.innerHTML = alerts.map(a=>`
+      <div class="alert ${LV[a.level]||'green'}">
+        <div class="ahead"><span class="dot ${LV[a.level]||'green'}"></span>${esc(a.game||'')}
+          <span class="tag-msg ${LV[a.level]||'green'}" style="margin-left:auto">${LVTXT[a.level]||''}</span></div>
+        <div class="atext">${esc(a.text||'')}</div>
+      </div>`).join('');
+  } else aBox.innerHTML = '<div style="color:var(--sub);padding:12px">暂无预警数据</div>';
+}
+
+// ② KPI 卡片
 function renderSummary(){
   const grid = document.getElementById('summaryGrid');
   const games = D.games || [];
-  if(games.length===0){ grid.innerHTML = '<div class="err">data.json 中 games 数组为空</div>'; return; }
+  if(games.length===0){ grid.innerHTML = '<div class="err">games 数组为空</div>'; return; }
   grid.innerHTML = games.map(g=>{
     const rc = g.riskLevel==='高'?'risk-high':g.riskLevel==='中'?'risk-medium':'risk-low';
     const bc = g.riskLevel==='高'?'high':g.riskLevel==='中'?'medium':'low';
@@ -332,6 +357,7 @@ function renderSummary(){
   }).join('');
 }
 
+// ③ 趋势图
 function renderTrend(){
   const ctx = document.getElementById('trendChart').getContext('2d');
   const weeks = D.trendWeeks || [];
@@ -350,6 +376,7 @@ function renderTrend(){
   });
 }
 
+// ③ 风险饼图
 function renderRiskPie(){
   const ctx = document.getElementById('riskPie').getContext('2d');
   const dist = D.riskDistribution || {};
@@ -361,6 +388,24 @@ function renderRiskPie(){
   });
 }
 
+// ④ 时间轴
+function renderTimeline(){
+  const tBox = document.getElementById('wb-timeline');
+  const tl = D.timeline || [];
+  if(tl.length>0){
+    tBox.innerHTML = tl.map(t=>{
+      const isTodo = !t.actual || t.actual.startsWith('（待填') || t.actual.startsWith('(待填');
+      return `<div class="tl-node">
+        <div class="tl-date">${esc(t.date||'')}</div>
+        <div class="tl-name">${esc(t.node||'')}</div>
+        <div class="tl-h"><span class="tl-lbl">历史规律</span>${esc(t.history||'')}</div>
+        <div class="tl-a ${isTodo?'todo':''}"><span class="tl-lbl">本期实际</span>${esc(t.actual||'（待填）')}</div>
+      </div>`;
+    }).join('');
+  } else tBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无时间轴数据</div>';
+}
+
+// ⑤ 事件表
 function renderEvents(){
   const tbody = document.getElementById('eventsBody');
   const events = (D.recentEvents||[]).slice(0,30);
@@ -378,6 +423,7 @@ function renderEvents(){
   }).join('');
 }
 
+// ⑥ 对比图
 function renderCompare(){
   const ctx = document.getElementById('compareChart').getContext('2d');
   const games = D.games||[];
@@ -395,35 +441,8 @@ function renderCompare(){
   });
 }
 
-// ========= 深度看板渲染 ==========
-function renderWatchboard(){
-  if(!D) return;
-  const meta = D.meta || {};
-  const aBox = document.getElementById('wb-alerts');
-  const alerts = D.alerts || [];
-  if(alerts.length>0){
-    aBox.innerHTML = alerts.map(a=>`
-      <div class="alert ${LV[a.level]||'green'}">
-        <div class="ahead"><span class="dot ${LV[a.level]||'green'}"></span>${esc(a.game||'')}
-          <span class="tag-msg ${LV[a.level]||'green'}" style="margin-left:auto">${LVTXT[a.level]||''}</span></div>
-        <div class="atext">${esc(a.text||'')}</div>
-      </div>`).join('');
-  } else aBox.innerHTML = '<div style="color:var(--sub);padding:12px">暂无预警数据</div>';
-
-  const tBox = document.getElementById('wb-timeline');
-  const tl = D.timeline || [];
-  if(tl.length>0){
-    tBox.innerHTML = tl.map(t=>{
-      const isTodo = !t.actual || t.actual.startsWith('（待填') || t.actual.startsWith('(待填');
-      return `<div class="tl-node">
-        <div class="tl-date">${esc(t.date||'')}</div>
-        <div class="tl-name">${esc(t.node||'')}</div>
-        <div class="tl-h"><span class="tl-lbl">历史规律</span>${esc(t.history||'')}</div>
-        <div class="tl-a ${isTodo?'todo':''}"><span class="tl-lbl">本期实际</span>${esc(t.actual||'（待填）')}</div>
-      </div>`;
-    }).join('');
-  } else tBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无时间轴数据</div>';
-
+// ⑦ 游戏卡片
+function renderGames(){
   const gBox = document.getElementById('wb-games');
   const games = D.games || [];
   if(games.length>0){
@@ -450,7 +469,7 @@ function renderWatchboard(){
           </div>
           <div class="blk"><div class="bt">📈 本周动态</div>
             <div class="wk"><span class="tag-msg ${LV[last.status]||'green'}" style="flex:none">${LVTXT[last.status]||''}</span>
-            <span>${esc(last.week||'')}：声量${last.volume||'-'} / 发帖${last.posts||'-'}。${(last.highlight||'')}</span></div>
+            <span>${esc(last.week||'')}：声量${last.volume||'-'} / 发帖${last.posts||'-'}。${last.highlight||''}</span></div>
           </div>
           <div class="blk"><div class="bt">🗂 主要观点聚类（Top）</div>${topics}</div>
           <div class="blk"><div class="bt">📡 渠道分布</div><div class="chips">${channels}</div></div>
@@ -459,8 +478,11 @@ function renderWatchboard(){
       </div>`;
     }).join('');
   } else gBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无游戏数据</div>';
+}
 
-  const cBox = document.getElementById('wb-ctopics');
+// ⑧ 共性议题
+function renderCommonTopics(){
+  const cBox = document.getElementById('wb-topics');
   const cts = D.commonTopics || [];
   if(cts.length>0){
     cBox.innerHTML = cts.map(c=>`
@@ -470,31 +492,24 @@ function renderWatchboard(){
         <div class="gg">${(c.games||[]).map(g=>`<span>${esc(g)}</span>`).join('')}</div>
       </div>`).join('');
   } else cBox.innerHTML = '<div style="padding:12px;color:var(--sub)">暂无共性议题数据</div>';
+}
 
+function renderFooter(){
   document.getElementById('wb-footer').innerHTML =
     `本看板数据每周更新 · 数据来源：舆情监测系统导入 + Feedly MCP 监控<br>`+
     `最后更新：${esc(D.meta?.updateDate||D.lastUpdate||'—')}`;
 }
 
-// ========= 原始数据渲染 ==========
+// ===== 原始数据 Tab =====
 function renderRawData(){
-  // data.json
   const el1 = document.getElementById('rawDataOut');
-  if(rawDataText){
-    el1.innerHTML = syntaxHighlight(rawDataText);
-  } else {
-    el1.innerHTML = '<div class="json-error">⚠️ data.json 加载失败或为空</div>';
-  }
+  if(rawDataText) el1.innerHTML = syntaxHighlight(rawDataText);
+  else el1.innerHTML = '<div class="json-error">⚠️ data.json 加载失败或为空</div>';
 
-  // watchboard-data.json
   const el2 = document.getElementById('rawWbOut');
-  if(rawWbText){
-    el2.innerHTML = syntaxHighlight(rawWbText);
-  } else {
-    el2.innerHTML = '<div class="json-error">⚠️ watchboard-data.json 加载失败或为空</div>';
-  }
+  if(rawWbText) el2.innerHTML = syntaxHighlight(rawWbText);
+  else el2.innerHTML = '<div class="json-error">⚠️ watchboard-data.json 加载失败或为空</div>';
 
-  // 元信息
   const metaEl = document.getElementById('rawMeta');
   const dataTime = D?.lastUpdate || D?.meta?.updateDate || '—';
   metaEl.innerHTML = `
@@ -503,26 +518,17 @@ function renderRawData(){
     <div class="rm"><b>最后更新</b>：${dataTime}</div>
     <div class="rm"><b>游戏数量</b>：${(D?.games||[]).length} 款</div>
   `;
-
-  // 数据校验
   renderValidate();
 }
 
 function syntaxHighlight(json){
-  // 简单 JSON 语法高亮
   const escaped = esc(json);
   return escaped
-    // 键名
     .replace(/("[\w\u4e00-\u9fff]+")\s*:/g, '<span class="jk">$1</span>:')
-    // 字符串值
     .replace(/:\s*("(?:[^"\\]|\\.)*")(,?)/g, (m,s,t)=>`: <span class="jstr">${s}</span>${t}`)
-    // 数字
-    .replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="jnum">$1</span>')
-    // 布尔
-    .replace(/:\s*(true|false)/g, ': <span class="jbool">$1</span>')
-    // null
-    .replace(/:\s*(null)/g, ': <span class="jnull">$1</span>')
-    // 数组/对象括号
+    .replace(/:\s*(-?\d+\.?\d*)(?=[,\s\]\}])/g, ': <span class="jnum">$1</span>')
+    .replace(/:\s*(true|false)(?=[,\s\]\}])/g, ': <span class="jbool">$1</span>')
+    .replace(/:\s*(null)(?=[,\s\]\}])/g, ': <span class="jnull">$1</span>')
     .replace(/([\[\]{}])/g, '<span class="jarr">$1</span>');
 }
 
@@ -552,15 +558,12 @@ function toggleWrap(id){
   el.style.whiteSpace = el.style.whiteSpace==='pre' ? 'pre-wrap' : 'pre';
 }
 
-// ========= 数据校验 ==========
+// ===== 数据校验 =====
 function renderValidate(){
   const el = document.getElementById('rawValidate');
   if(!D){ el.innerHTML = '<div class="json-error">数据未加载</div>'; return; }
-
   const issues = [];
   const games = D.games || [];
-
-  // 检查 games 数组
   if(games.length===0) issues.push('⚠️ games 数组为空');
   games.forEach((g,i)=>{
     if(!g.name) issues.push(`⚠️ games[${i}].name 缺失`);
@@ -570,25 +573,17 @@ function renderValidate(){
       }
     }
   });
-
-  // 检查 trendWeeks
-  if(!D.trendWeeks || D.trendWeeks.length===0) issues.push('⚠️ trendWeeks 为空');
-
-  // 检查 alerts
   const alerts = D.alerts || [];
   alerts.forEach((a,i)=>{
     if(!a.game) issues.push(`⚠️ alerts[${i}].game 缺失`);
     if(!a.level) issues.push(`⚠️ alerts[${i}].level 缺失`);
   });
-
-  // 检查 timeline
   const tl = D.timeline || [];
   tl.forEach((t,i)=>{
     if(t.actual && (t.actual.startsWith('（待填') || t.actual.startsWith('(待填'))){
       issues.push(`📝 时间轴「${t.node||i}」的"本期实际"待填写`);
     }
   });
-
   if(issues.length===0){
     el.innerHTML = '<div style="background:#e8f5e9;color:#2e7d32;padding:14px 18px;border-radius:10px;font-size:13.5px">✅ 数据校验通过，未发现明显问题</div>';
   } else {
@@ -596,7 +591,7 @@ function renderValidate(){
   }
 }
 
-// ========= 启动 ==========
+// ===== 启动 =====
 loadAll();
 setInterval(loadAll, 10*60*1000);
 </script>
