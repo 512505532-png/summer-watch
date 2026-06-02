@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 // ========== 配置区 ==========
-const WEBHOOK_URL = process.env.WECOM_WEBHOOK_URL || '';
+const WEBHOOK_URL = process.env.WECOM_WEBHOOK_URL || 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=b5887dbd-e417-4fa5-9816-d666eeb95840';
 // =============================
 
 const DATA_FILE = path.join(__dirname, 'data.json');
