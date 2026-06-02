@@ -1,7 +1,15 @@
 # 暑期未成年人保护观察仪表盘 · 2026
 
-GitHub Pages 托管地址（部署后更新）：
-👉 https://512505532-png.github.io/summer-watch/
+🌐 **在线访问**：https://512505532-png.github.io/summer-watch/
+
+## 功能
+
+- 📊 四游戏总览卡片（暗区突围 / 火影忍者手游 / 元梦之星 / 三角洲行动）
+- 📈 舆情趋势折线图（近12周）
+- ⚠️ 风险类别分布图
+- 📰 最新舆情事件表格
+- 📊 四游戏暑期数据对比图
+- 🔄 每10分钟自动刷新数据
 
 ## 本地预览
 
@@ -13,9 +21,60 @@ npx serve .
 
 ## 更新数据
 
-编辑 `data.json` 后提交推送即可，仪表盘每10分钟自动刷新。
+编辑 `data.json` 后提交推送，仪表盘自动刷新：
 
-### data.json 字段说明
+```bash
+# 手动编辑 data.json 后：
+git add data.json
+git commit -m "update: 0602数据"
+git push origin main
+```
+
+### 使用 CLI 工具更新
+
+```bash
+# 添加一条舆情事件
+node update-data.js add-event \
+  --game "暗区突围" \
+  --date 2026-06-03 \
+  --title "XXX投诉" \
+  --category 风险 \
+  --severity 高 \
+  --url "https://..."
+
+# 设置某游戏某周计数（用于趋势图）
+node update-data.js set-weekly \
+  --game "暗区突围" \
+  --week "6月W1" \
+  --count 3
+
+# 设置风险等级
+node update-data.js set-risk \
+  --game "暗区突围" \
+  --level 高
+
+# 增减事件计数
+node update-data.js bump-event \
+  --game "暗区突围" \
+  --delta 1 \
+  --high 1
+```
+
+## 企微周报推送
+
+已配置企业微信群机器人，每周一 9:00 自动推送。
+
+手动触发：
+```bash
+node weekly-push.js
+```
+
+## 自动化
+
+- ✅ GitHub Pages 自动部署（`main` 分支推送即更新）
+- ✅ 企微周报自动推送（每周一 9:00，自动化任务 ID：`automation-1780371152313`）
+
+## data.json 字段说明
 
 ```jsonc
 {
@@ -43,20 +102,3 @@ npx serve .
   }]
 }
 ```
-
-## GitHub Pages 部署步骤
-
-1. 登录 GitHub：`gh auth login`（选 GitHub.com → HTTPS → 浏览器登录）
-2. 创建仓库：
-   ```bash
-   gh repo create summer-watch --public --source=. --push
-   ```
-3. 开启 Pages：
-   - 进入仓库 Settings → Pages
-   - Source 选 `Deploy from a branch`
-   - Branch 选 `main` / `root`
-   - 保存，等待 1-2 分钟生效
-
-## 企微周报推送
-
-见 `weekly-push.js` 说明。
