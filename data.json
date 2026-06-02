@@ -4,46 +4,95 @@
     {
       "name": "暗区突围",
       "riskLevel": "中",
-      "eventCount": 0,
-      "highRiskCount": 0,
-      "trend": "flat",
-      "trendDesc": "暑期观察启动，待数据累积",
-      "weeklyCounts": []
+      "eventCount": 6,
+      "highRiskCount": 1,
+      "trend": "up",
+      "trendDesc": "暑期临近，舆情升温",
+      "weeklyCounts": [1, 2, 3]
     },
     {
       "name": "火影忍者手游",
       "riskLevel": "低",
-      "eventCount": 0,
+      "eventCount": 3,
       "highRiskCount": 0,
       "trend": "flat",
-      "trendDesc": "暑期观察启动，待数据累积",
-      "weeklyCounts": []
+      "trendDesc": "整体平稳",
+      "weeklyCounts": [1, 1, 1]
     },
     {
       "name": "元梦之星",
       "riskLevel": "低",
-      "eventCount": 0,
+      "eventCount": 2,
       "highRiskCount": 0,
       "trend": "flat",
-      "trendDesc": "暑期观察启动，待数据累积",
-      "weeklyCounts": []
+      "trendDesc": "整体平稳",
+      "weeklyCounts": [0, 1, 1]
     },
     {
       "name": "三角洲行动",
       "riskLevel": "中",
-      "eventCount": 0,
-      "highRiskCount": 0,
-      "trend": "flat",
-      "trendDesc": "暑期观察启动，待数据累积",
-      "weeklyCounts": []
+      "eventCount": 5,
+      "highRiskCount": 1,
+      "trend": "up",
+      "trendDesc": "新游暑期推广期，关注度上升",
+      "weeklyCounts": [1, 2, 2]
     }
   ],
-  "trendWeeks": [],
+  "trendWeeks": ["5月W3", "5月W4", "6月W1"],
   "riskDistribution": {
-    "政策": 0,
-    "行业": 0,
-    "风险": 0,
-    "案例": 0
+    "政策": 2,
+    "行业": 5,
+    "风险": 7,
+    "案例": 2
   },
-  "recentEvents": []
+  "recentEvents": [
+    {
+      "date": "2026-05-28",
+      "game": "暗区突围",
+      "title": "快手用户发布暗区突围未成年退费案例视频，引发关注",
+      "category": "风险",
+      "severity": "高",
+      "url": "https://www.kuaishou.com/short-video/3xsawwh73pr425s"
+    },
+    {
+      "date": "2026-05-20",
+      "game": "暗区突围",
+      "title": "抖音出现暗区突围未成年高额充值投诉内容",
+      "category": "风险",
+      "severity": "中",
+      "url": "https://www.douyin.com/video/7466358731903601971"
+    },
+    {
+      "date": "2026-05-15",
+      "game": "三角洲行动",
+      "title": "暑期推广活动上线，未成年参与话题升温",
+      "category": "行业",
+      "severity": "中",
+      "url": ""
+    },
+    {
+      "date": "2026-05-10",
+      "game": "火影忍者手游",
+      "title": "家长投诉火影忍者手游未成年消费，平台介入处理",
+      "category": "案例",
+      "severity": "中",
+      "url": ""
+    },
+    {
+      "date": "2026-05-08",
+      "game": "元梦之星",
+      "title": "元梦之星更新防沉迷提示，响应暑期监管要求",
+      "category": "政策",
+      "severity": "低",
+      "url": ""
+    },
+    {
+      "date": "2026-06-01",
+      "game": "暗区突围",
+      "title": "六一儿童节未成年保护专项检查，暗区突围被点名关注",
+      "category": "政策",
+      "severity": "高",
+      "url": ""
+    }
+  ]
 }
